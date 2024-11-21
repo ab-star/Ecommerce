@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.1",
+    "glob": "^11.0.0",
+    "inversify": "^6.1.4",
+    "inversify-express-utils": "^6.4.7",
+    "nodemon": "^3.1.7",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.5",
+    "sequelize-typescript": "^2.1.6",
+    "zod": "^3.23.8",
+    "zod-express": "^0.0.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/node": "^22.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "build": "tsc",
+    "prebuild": "rimraf dist",
+    "prod": "NODE_ENV=production pm2 start dist/app.js --name 'my-app' --watch",
+    "lint": "eslint 'src/**/*.ts' --fix",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "format": "prettier --write 'src/**/*.ts'",
+    "docker:build": "docker build -t my-app .",
+    "docker:run": "docker run -p 3000:3000 my-app",
+    "docker:deploy": "docker-compose up -d"
+  }
+}

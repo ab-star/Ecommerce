@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2020",                                  /* Modern JavaScript features for better performance and syntax support. */
+    "module": "commonjs",                                /* Suitable for Node.js environment. */
+    "moduleResolution": "node",                         /* Resolve modules in the Node.js style. */
+    "experimentalDecorators": true,                     /* Enable support for TypeScript decorators. */
+    "emitDecoratorMetadata": true,                      /* Emit metadata for runtime reflection used by InversifyJS. */
+    "esModuleInterop": true,                             /* Compatibility with CommonJS modules. */
+    "strict": true,                                      /* Enable all strict type-checking options. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure consistent casing in imports. */
+    "skipLibCheck": true,                                /* Skip type checking for declaration files for faster builds. */
+    "outDir": "./dist",                                  /* Output directory for compiled files. */
+    "rootDir": "./src",                                  /* Specify the root directory of the source files. */
+    "resolveJsonModule": true   ,
+    "sourceMap": true,  // This enables source maps for debugging
+  },
+  "include": ["src/**/*"],                                    /* Include only source files for compilation. */
+  "exclude": ["node_modules", "dist"]                   /* Exclude unnecessary directories. */
+}

@@ -1,0 +1,27 @@
+# Ignore node_modules and build output in both client and server
+
+# Server-side (Node.js, Express, TypeScript)
+server/node_modules/
+server/dist/
+server/build/
+server/.env
+server/.env.local
+server/.env.*.local
+server/.vscode/
+server/coverage/
+
+# Client-side (React, etc.)
+client/node_modules/
+client/build/
+client/.env
+client/.env.local
+client/.env.*.local
+client/.vscode/
+client/coverage/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore package-lock.json if using yarn instead of npm
+package-lock.json
