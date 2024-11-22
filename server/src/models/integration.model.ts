@@ -1,20 +1,19 @@
 // src/models/integration.model.ts
 
-import { Column, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
+import { AutoIncrement, Column, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 
-@Table({ tableName: 'Integrations' })
+@Table
 export class Integration extends Model<Integration> {
   @PrimaryKey
+  @AutoIncrement
   @Column
   id!: number;
 
   @Unique
   @Column
-  email!: string;
-
-  @Column
   apiUrl!: string;
 
+  @Unique
   @Column
   apiToken?: string;  // Optional token for API authorization
 }

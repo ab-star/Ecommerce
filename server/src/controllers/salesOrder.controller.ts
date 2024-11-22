@@ -14,7 +14,7 @@ export class SalesOrderController {
     @inject(TYPES.SalesOrderService) private salesOrderService: SalesOrderService
   ) {}
 
-  @httpPost('/', validateRequest(SalesOrderReqSchema))
+  @httpPost('/', validateRequest({body:SalesOrderReqSchema}))
   public async createSalesOrder(@requestBody() salesOrderData: any, @response() res: any) {
     try {
       const result = await this.salesOrderService.createSalesOrder(salesOrderData);

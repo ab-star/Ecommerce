@@ -71,7 +71,7 @@ export class SalesOrderRepository {
   }
 
   // Update a sales order
-  public async updateSalesOrder(id: number, updateData: any): Promise<SalesOrder> {
+  public async updateSalesOrder(id: string, updateData: any): Promise<SalesOrder> {
     const salesOrder = await SalesOrder.findByPk(id);
     if (!salesOrder) {
       throw new Error('Sales order not found');
@@ -81,7 +81,7 @@ export class SalesOrderRepository {
   }
 
   // Delete a sales order and update stock
-  public async deleteSalesOrder(id: number): Promise<void> {
+  public async deleteSalesOrder(id: string): Promise<void> {
     return sequelize.transaction(async (transaction) => {
       const salesOrder = await SalesOrder.findByPk(id, { transaction });
       if (!salesOrder) {

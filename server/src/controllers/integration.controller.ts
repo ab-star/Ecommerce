@@ -1,7 +1,6 @@
-import { controller, httpPost, httpGet, httpPut, httpDelete, request, requestBody, response, requestParam } from 'inversify-express-utils';
+import { controller, httpPost, httpGet, httpPut, httpDelete, request, requestBody, response, requestParam, next as nextHandler, next } from 'inversify-express-utils';
 import { IntegrationService } from '../services/integration.service';
-import { createIntegrationSchema } from '../schemas/integration.schema';
-import { z } from 'zod';
+import { createIntegrationSchema } from '../schemas/integration.schema'; // Adjusted import
 import { inject } from 'inversify';
 import { TYPES } from '../types';
 import { validateRequest } from '../middlewares/validateRequest.middleware';
@@ -16,81 +15,49 @@ export class IntegrationController {
     this.integrationService = integrationService;
   }
 
-  // Create a new integration
-  @httpPost('/', validateRequest(createIntegrationSchema))
-  async createIntegration(@requestBody() body: any) {
-    const parsedData = createIntegrationSchema.safeParse(body);
-    if (!parsedData.success) {
-      return { status: 400, message: 'Invalid input data', errors: parsedData.error.errors };
-    }
-
-    const { email, apiUrl, apiToken } = parsedData.data;
-
+  // Create a new integration or replace an existing one
+  @httpPost('/', validateRequest({ body: createIntegrationSchema }))
+  async createIntegration(@requestBody() body: any, @response() res: any, @next() next: any) {
     try {
-      const integration = await this.integrationService.createIntegration(email, apiUrl, apiToken);
-      return { status: 201, message: 'Integration created successfully', integration };
+      const { apiUrl, apiToken } = body;
+      const integration = await this.integrationService.createOrReplaceIntegration(apiUrl, apiToken);
+      res.status(201).json({ message: 'Integration created/replaced successfully', integration });
     } catch (error) {
-      return { status: 500, message: error.message };
+      return next(error); // Passing service-level errors to error handler
     }
   }
 
-  // Fetch integration by email
-  @httpGet('/:email') 
-  async getIntegration(@requestParam('email') email: string) {
+  // Fetch integration details
+  @httpGet('/') 
+  async getIntegration(@response() res: any, @next() next: any) {
     try {
-      const integration = await this.integrationService.getIntegrationByEmail(email);
-      if (!integration) {
-        return { status: 404, message: 'Integration not found' };
-      }
-      return { status: 200, integration };
+      const integration = await this.integrationService.getIntegration();
+      res.status(200).json({ integration });
     } catch (error) {
-      return { status: 500, message: error.message };
+      return next(error); // Passing service-level errors to error handler
     }
   }
 
   // Update an existing integration
-  @httpPut('/:email')
-  async updateIntegration(@requestParam('email') email: string, @requestBody() body: any) {
-    // const parsedData = updateIntegrationSchema.safeParse(body);
-    const parsedData = {success: ""}
-    if (!parsedData.success) {
-      return { status: 400, message: 'Invalid input data', errors: parsedData.error.errors };
-    }
-
-    const { apiUrl, apiToken } = parsedData.data;
-
+  @httpPut('/')
+  async updateIntegration(@requestBody() body: any, @response() res: any, @next() next: any) {
     try {
-      const integration = await this.integrationService.updateIntegration(email, apiUrl, apiToken);
-      if (!integration) {
-        return { status: 404, message: 'Integration not found' };
-      }
-      return { status: 200, message: 'Integration updated successfully', integration };
+      const { apiUrl, apiToken } = body;
+      const updatedIntegration = await this.integrationService.updateIntegration(apiUrl, apiToken);
+      res.status(200).json({ message: 'Integration updated successfully', updatedIntegration });
     } catch (error) {
-      return { status: 500, message: error.message };
+      return next(error); // Passing service-level errors to error handler
     }
   }
 
-  // Delete an integration
-  @httpDelete('/:email')
-  async deleteIntegration(@requestParam('email') email: string) {
+  // Delete the integration
+  @httpDelete('/')
+  async deleteIntegration(@response() res: any, @next() next: any) {
     try {
-      const message = await this.integrationService.deleteIntegration(email);
-      return { status: 200, message };
+      const message = await this.integrationService.deleteIntegration();
+      res.status(200).json({ message });
     } catch (error) {
-      return { status: 500, message: error.message };
-    }
-  }
-
-  // Send sales order to third-party API
-  @httpPost('/salesOrder')
-  async sendSalesOrder(@requestBody() body: any) {
-    const { email, salesData } = body;
-
-    try {
-      await this.integrationService.sendSalesOrderToAPI(email, salesData);
-      return { status: 200, message: 'Sales order sent to external API successfully' };
-    } catch (error) {
-      return { status: 500, message: error.message };
+      return next(error); // Passing service-level errors to error handler
     }
   }
 }

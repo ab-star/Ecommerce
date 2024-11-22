@@ -4,6 +4,8 @@ import { container } from './inversify.config';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 import './controllers/salesOrder.controller';
 import './controllers/masterProduct.controller';
+import './controllers/integration.controller';
+import './controllers/masterProductInt.controller';
 
 import { connectDb } from './config/db.config';
 

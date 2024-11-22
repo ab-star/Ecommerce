@@ -58,7 +58,15 @@ export class SalesOrderService {
   // }
 
   // Get sales orders with dynamic filtering
-  public async getSalesOrders(filters: any): Promise<any> {
+  public async getSalesOrders(filters: any) {
     return this.salesOrderRepository.getSalesOrders(filters);
+  }
+
+  public async deleteOrder(id: string , updateData: any) {
+    return this.salesOrderRepository.updateSalesOrder(id , updateData);
+  }
+
+  public async updateOrder(id: string) {
+    return this.salesOrderRepository.deleteSalesOrder(id);
   }
 }

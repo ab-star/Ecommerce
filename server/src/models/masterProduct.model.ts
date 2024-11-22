@@ -17,6 +17,9 @@ export class MasterProduct extends Model<MasterProduct> {
   description!: string;
 
   @Column
+  email!: string;
+
+  @Column
   stock!: number; // Available stock
   
   @Column({ defaultValue: false })

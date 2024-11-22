@@ -1,38 +1,39 @@
 import { inject } from 'inversify';
-import { controller, httpPost, httpGet, httpPut, httpDelete, request, requestBody, response } from 'inversify-express-utils';
+import { controller, httpPost, httpGet, httpPut, httpDelete, request, requestBody, response, queryParam, requestParam, next } from 'inversify-express-utils';
 import { MasterProductService } from '../services/masterProduct.service';
 import { ApiResponse } from '../dtos/response.dto';
 import { validateRequest } from '../middlewares/validateRequest.middleware';
 import { TYPES } from '../types';
 import { ApiError } from '../dtos/error.dto';
-import { MasterProductData, MasterProductSchema } from '../schemas/masterProduct.schema';
+import { MasterProductPathSchema, MasterProductQuerySchema, MasterProductSchema, MasterProductType } from '../schemas/masterProduct.schema';
+import { NextFunction, Response, Request } from 'express';
 
 @controller('/api/master-products')
 export class MasterProductController {
   constructor(
     @inject(TYPES.MasterProductService) private masterProductService: MasterProductService
-  ) {}
+  ) { }
 
-  @httpPost('/', validateRequest(MasterProductSchema))
-  public async createMasterProduct(@requestBody() masterProductData: MasterProductData, @response() res: any) {
+  @httpPost('/', validateRequest({ body: MasterProductSchema }))
+  public async createMasterProduct(@requestBody() masterProductData: MasterProductType,
+    @response() res: Response, @next() next: NextFunction) {
     try {
       const result = await this.masterProductService.createMasterProduct(masterProductData);
       res.status(201).json(new ApiResponse(true, 'Master product created successfully', result));
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        res.status(500).json(new ApiError('Error creating master product', [{ message: error.message }]));
-      } else {
-        res.status(500).json(new ApiError('Unknown error occurred', [{ message: 'An unknown error occurred' }]));
-      }
+      next(error)
     }
   }
 
-  @httpGet('/')
-  public async getMasterProducts(@request() req: any, @response() res: any) {
-    const filters = req.query;
-    const { page = 1, pageSize = 10 } = req.query;
+  @httpGet('/', validateRequest({ query: MasterProductQuerySchema }))
+  public async getMasterProducts(
+    @request() req: Request,
+    @queryParam('page') page: number,
+    @queryParam('limit') limit: number,
+    @response() res: Response,
+    @next() next: NextFunction) {
     try {
-      const result = await this.masterProductService.getMasterProducts(filters, Number(page), Number(pageSize));
+      const result = await this.masterProductService.getMasterProducts(page, limit);
       res.status(200).json(new ApiResponse(true, 'Master products retrieved successfully', result));
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -43,25 +44,27 @@ export class MasterProductController {
     }
   }
 
-  @httpPut('/:id')
-  public async updateMasterProduct(@request() req: any, @response() res: any) {
-    const { id } = req.params;
-    const updateData = req.body;
+  @httpPut('/:id', validateRequest({ params: MasterProductPathSchema }))
+  public async updateMasterProduct(
+    @requestBody() payload: MasterProductType,
+    @requestParam("id") id: string,
+    @response() res: Response,
+    @next() next: NextFunction) {
+
     try {
-      const result = await this.masterProductService.updateMasterProduct(id, updateData);
+      const result = await this.masterProductService.updateMasterProduct(id, payload);
       res.status(200).json(new ApiResponse(true, 'Master product updated successfully', result));
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        res.status(500).json(new ApiError('Error updating master product', [{ message: error.message }]));
-      } else {
-        res.status(500).json(new ApiError('Unknown error occurred', [{ message: 'An unknown error occurred' }]));
-      }
+      next(error)
     }
   }
 
-  @httpDelete('/:id')
-  public async deleteMasterProduct(@request() req: any, @response() res: any) {
-    const { id } = req.params;
+  @httpDelete('/:id', validateRequest({ params: MasterProductPathSchema }))
+  public async deleteMasterProduct(
+    @request() req: Request,
+    @response() res: Response,
+    @next() next: NextFunction,
+    @requestParam("id") id: string) {
     try {
       await this.masterProductService.deleteMasterProduct(id);
       res.status(200).json(new ApiResponse(true, 'Master product deleted successfully'));

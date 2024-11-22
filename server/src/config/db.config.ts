@@ -3,6 +3,7 @@ import { SalesOrder } from '../models/salesOrder.model';
 import { OrderProduct } from '../models/salesOrderProduct.model';
 import { MasterProduct } from '../models/masterProduct.model';
 import { QueryTypes } from 'sequelize';
+import { Integration } from '../models/integration.model';
 
 // Global variable to hold the Sequelize instance for the ecom database
 let sequelize: Sequelize;
@@ -38,7 +39,7 @@ export const connectDb = async () => {
       username: 'root',
       password: 'yourpassword', // Use your actual password
       database: 'ecom',         // Use 'ecom' database now
-      models: [SalesOrder, OrderProduct, MasterProduct],
+      models: [SalesOrder, OrderProduct, MasterProduct , Integration],
       logging: false,            // Enable logging for development
     });
 

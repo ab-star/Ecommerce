@@ -1,62 +1,115 @@
+import { CreationAttributes, UniqueConstraintError } from 'sequelize';
 import { MasterProduct } from '../models/masterProduct.model';
-import { Sequelize, Op, Optional, CreationAttributes } from 'sequelize';
-import { MasterProductData } from '../schemas/masterProduct.schema';
+import { NotFoundError, RepositoryError, ValidationError } from '../utils/errorCategory';
+import { GENERIC_ERROR_MESSAGE, REPOSITORY_ERRORS } from '../constants/error.constants';
+import { MasterProductType } from '../schemas/masterProduct.schema';
 
 export class MasterProductRepository {
   // Create a new master product
-  public async createMasterProduct(masterProductData: MasterProductData): Promise<MasterProduct> {
-    // Use CreationAttributes to properly type the object for create()
-    const product = await MasterProduct.create(masterProductData as CreationAttributes<MasterProduct>);
+  public async createMasterProduct(masterProductData: MasterProductType) {
+    try {
+      const data = masterProductData as CreationAttributes<MasterProduct>;
+      // Attempt to create the new master product
+      const newProduct = await MasterProduct.create(data);
+      return newProduct;
+    } catch (error: unknown) {
+      if (error instanceof UniqueConstraintError) {
+        // Handle the unique constraint violation error (e.g., duplicate product name or other fields)
+        const duplicateField = error.errors[0].path as string; // The field that caused the violation
+        const message = REPOSITORY_ERRORS.DUPLICATE_RECORD(duplicateField);
+        throw new ValidationError(message, [message], error);
+      }
 
-    return product;
+      // Handle other errors
+      throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
+    }
   }
 
   // Get master products with dynamic filters and pagination
-  public async getMasterProducts(filters: any, page: number = 1, pageSize: number = 10): Promise<{ products: MasterProduct[], total: number }> {
-    const { name , priceRange , isInternal } = filters;
+  public async getMasterProducts(page: number = 1, pageSize: number = 10 , isInternal=false) {
+    try {
+      // Fetch paginated results
 
-    const whereClause = {
-      ...(name && { name: { [Op.like]: `%${name}%` } }),
-      ...(isInternal && {isInternal}),
-      ...(priceRange && {
-        price: {
-          [Op.between]: [priceRange.min, priceRange.max], // Filtering by price range
-        },
-      }),
-    };
+      const whereFilter: {[key: string]: boolean} = {}
+      if(isInternal){
+        whereFilter.isInternal = true
+      }
 
-    // Get paginated results
-    const products = await MasterProduct.findAll({
-      where: whereClause,
-      limit: pageSize,
-      offset: page * pageSize,  // Calculate the offset for pagination
-    });
-
-    // Get the total count of matching products (for pagination metadata)
-    const total = await MasterProduct.count({
-      where: whereClause,
-    });
-
-    return { products, total };
+      const products = await MasterProduct.findAll({
+        where: whereFilter,
+        limit: pageSize,
+        offset: page * pageSize, // Calculate the offset for pagination
+      });
+  
+      // Get the total count of products (for pagination metadata)
+      const total = await MasterProduct.count({where: whereFilter});
+  
+      return { products, total };
+    } catch (error: any) {
+      throw new RepositoryError('Failed to fetch master products', error);
+    }
   }
 
   // Update a master product
-  public async updateMasterProduct(id: string, updateData: MasterProductData): Promise<MasterProduct> {
-    const masterProduct = await MasterProduct.findByPk(id);
-    if (!masterProduct) {
-      throw new Error('Master product not found');
+  public async updateMasterProduct(id: string, updateData: MasterProductType) {
+    try {
+      // Try to update the record
+      const [updatedRowCount, updatedMasterProduct] = await MasterProduct.update(
+        updateData,
+        { where: { id }, returning: true }
+      );
+  
+      if (updatedRowCount === 0) {
+        throw new NotFoundError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id));
+      }
+  
+      // Return the updated product if update was successful
+      return updatedMasterProduct;
+  
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        throw error; // Propagate NotFoundError
+      }
+      // Handle any other errors, such as repository or validation errors
+      throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
     }
-    return masterProduct.update(updateData);
-  }
+  }  
 
   // Delete a master product
-  public async deleteMasterProduct(id: string): Promise<boolean> {
-    const masterProduct = await MasterProduct.findByPk(id);
-    if (!masterProduct) {
-      throw new Error('Master product not found');
+  public async deleteMasterProduct(id: string) {
+    try {
+      // Try to delete the record
+      const deletedRowCount = await MasterProduct.destroy({
+        where: { id },
+      });
+  
+      if (deletedRowCount === 0) {
+        // The record was not found at all
+        throw new NotFoundError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id));
+      }
+  
+      // If a row was deleted, return true to indicate success
+      return {message: "Deleted Succussfully"};
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        throw error; // Propagate NotFoundError
+      }
+      // Handle other repository or validation errors
+      throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
     }
-    
-    await masterProduct.destroy();
-    return true;  // Return true if successfully deleted
   }
+
+  public async findProductByNameAndEmail(name: string, email: string) {
+    try {
+      return await MasterProduct.findOne({
+        where: {
+          name,
+          email
+        }
+      });
+    } catch (error) {
+      throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
+    }
+  }
+  
 }
