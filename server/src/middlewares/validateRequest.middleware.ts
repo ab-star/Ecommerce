@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
+import { ValidationError } from '../utils/errorCategory';
 
-const validateRequest = (schema: z.ZodSchema<any>) => {
+export const validateRequest = (schema: z.ZodSchema<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Validate the request body against the schema
       schema.parse(req.body);
-      next(); // If validation passes, continue to the next middleware or controller
+      next();
     } catch (error) {
       if (error instanceof ZodError) {
-        // If validation fails, return an error response
-        const errorMessages = error.errors.map(err => err.message);
-        return res.status(400).json({ success: false, errors: errorMessages });
+        const errorDetails = error.errors.map(err => ({
+          path: err.path.join('.'),
+          message: err.message,
+        }));
+        next(new ValidationError('Request validation failed', errorDetails));
+      } else {
+        next(error);
       }
-      // If error is unexpected, pass it to the global error handler
-      next(error);
     }
   };
 };
-
-export { validateRequest };

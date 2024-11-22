@@ -8,5 +8,8 @@ export const MasterProductSchema = z.object({
   stock: z.number().int().min(0, 'Stock should be a non-negative integer'), // Stock should be a non-negative integer
 });
 
+
 // Automatically infer the type from the Zod schema
 export type MasterProductData = z.infer<typeof MasterProductSchema>;
+export type MasterProductDataInt = MasterProductData & {isInternal: boolean};
+

@@ -12,8 +12,8 @@ export class MasterProductRepository {
   }
 
   // Get master products with dynamic filters and pagination
-  public async getMasterProducts(filters: any, page: number = 1, pageSize: number = 10 , isInternal: boolean): Promise<{ products: MasterProduct[], total: number }> {
-    const { name, category, status, priceRange } = filters;
+  public async getMasterProducts(filters: any, page: number = 1, pageSize: number = 10): Promise<{ products: MasterProduct[], total: number }> {
+    const { name , priceRange , isInternal } = filters;
 
     const whereClause = {
       ...(name && { name: { [Op.like]: `%${name}%` } }),

@@ -15,11 +15,11 @@ export class MasterProductService {
   }
 
   // Get master products with dynamic filtering and pagination
-  public async getMasterProducts(filters: any, page: number, pageSize: number , isInternal=false): Promise<any> {
+  public async getMasterProducts(filters: any, page: number, pageSize: number): Promise<any> {
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
-    const result = await this.masterProductRepository.getMasterProducts(filters, offset, limit , isInternal);
+    const result = await this.masterProductRepository.getMasterProducts(filters, offset, limit);
     return result;
   }
 

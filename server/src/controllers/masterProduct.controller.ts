@@ -5,7 +5,7 @@ import { ApiResponse } from '../dtos/response.dto';
 import { validateRequest } from '../middlewares/validateRequest.middleware';
 import { TYPES } from '../types';
 import { ApiError } from '../dtos/error.dto';
-import { MasterProductSchema } from '../schemas/masterProduct.schema';
+import { MasterProductData, MasterProductSchema } from '../schemas/masterProduct.schema';
 
 @controller('/api/master-products')
 export class MasterProductController {
@@ -14,7 +14,7 @@ export class MasterProductController {
   ) {}
 
   @httpPost('/', validateRequest(MasterProductSchema))
-  public async createMasterProduct(@requestBody() masterProductData: any, @response() res: any) {
+  public async createMasterProduct(@requestBody() masterProductData: MasterProductData, @response() res: any) {
     try {
       const result = await this.masterProductService.createMasterProduct(masterProductData);
       res.status(201).json(new ApiResponse(true, 'Master product created successfully', result));

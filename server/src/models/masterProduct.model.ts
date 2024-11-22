@@ -19,6 +19,6 @@ export class MasterProduct extends Model<MasterProduct> {
   @Column
   stock!: number; // Available stock
   
-  @Column
-  isInternal!: boolean; // created internally
+  @Column({ defaultValue: false })
+  isInternal!: boolean; // created internally, defaults to false if not provided
 }
