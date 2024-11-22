@@ -1,0 +1,20 @@
+<header class="header">
+    <nav class="navbar">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/products">Products</a>
+      <a routerLink="/about">About</a>
+      <a routerLink="/contact">Contact</a>
+      <div class="search-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          (input)="onSearch($event)"
+        />
+      </div>
+      <div class="cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="badge">{{ cartItemCount }}</span>
+      </div>
+    </nav>
+  </header>
+  
