@@ -1,0 +1,10 @@
+<div class="hero-section">
+    <owl-carousel-o [options]="carouselOptions">
+      <div *ngFor="let image of heroImages">
+        {{image.src}} hello
+        <ng-template carouselSlide>
+          <img [src]="image.src" [alt]="image.alt" class="hero-image" />
+        </ng-template>
+      </div>
+    </owl-carousel-o>
+  </div>

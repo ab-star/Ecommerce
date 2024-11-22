@@ -1,0 +1,21 @@
+/* Default grid with 4 columns */
+.responsive-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  /* For medium screens (e.g., tablets), make it 2 columns */
+  @media (max-width: 1024px) {
+    .responsive-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* For small screens (e.g., phones), make it 1 column */
+  @media (max-width: 640px) {
+    .responsive-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  

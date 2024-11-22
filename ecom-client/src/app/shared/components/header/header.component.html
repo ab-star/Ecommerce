@@ -1,0 +1,55 @@
+<!-- src/app/app.component.html -->
+<header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo (optional) -->
+      <div class="text-xl font-semibold">
+        <a href="/" class="text-white hover:text-gray-200">My Store</a>
+      </div>
+  
+      <!-- Navigation links -->
+      <nav class="hidden md:flex space-x-6">
+        <a href="/" class="hover:text-gray-200">Home</a>
+        <a href="/products" class="hover:text-gray-200">Products</a>
+        <a href="/about" class="hover:text-gray-200">About</a>
+        <a href="/contact" class="hover:text-gray-200">Contact</a>
+      </nav>
+  
+      <!-- Search Bar -->
+      <div class="relative hidden md:flex items-center">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="p-2 rounded-md w-64 text-black placeholder-gray-500"
+        />
+        <button class="absolute right-2 top-2 text-gray-500">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+  
+      <!-- Shopping Cart Icon -->
+      <div class="relative">
+        <button class="text-white">
+          <i class="fas fa-shopping-cart text-xl"></i>
+        </button>
+        <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">3</span>
+      </div>
+  
+      <!-- Hamburger Menu for Mobile -->
+      <div class="md:hidden flex items-center">
+        <button id="hamburger-menu" class="text-white">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="md:hidden hidden bg-blue-600 text-white p-4">
+      <nav class="space-y-4">
+        <a href="/" class="block">Home</a>
+        <a href="/products" class="block">Products</a>
+        <a href="/about" class="block">About</a>
+        <a href="/contact" class="block">Contact</a>
+      </nav>
+    </div>
+  </header>
+  
