@@ -32,7 +32,6 @@ export const connectDb = async () => {
       console.log('Database "ecom" created successfully');
     }
 
-    console.log(process.env.HOST_DB , )
 
     // Step 4: Initialize Sequelize with the 'ecom' database
     sequelize = new Sequelize({

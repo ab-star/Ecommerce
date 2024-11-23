@@ -4,6 +4,14 @@
 
 This project showcases the development of a full-stack e-commerce application, built with **Node.js**, **Express.js**, **Angular**, and **PostgreSQL**. The backend implements CRUD operations for sales orders and products, while the frontend provides an interactive and dynamic user interface for browsing products, making purchases, and viewing orders.
 
+ENCVIRONMENT DETAILS - 
+
+HOST_DB = localhost
+DB_USER = root
+DB_NAME = ecom
+PRIMARY_DB = postgres
+SECRET_KEY = c17b751c-73d8-4ab2-b5e8-3d92410ad83c
+
 ### Project Highlights
 - **Backend**: Implements REST APIs for managing products and sales orders, integrated with a PostgreSQL database. Includes features like product search and dynamic filtering of sales orders.
 - **Frontend**: Developed with Angular, featuring a responsive layout with a carousel, product grid, and cross-sell products section. The UI allows users to interact with the backend services seamlessly.

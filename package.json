@@ -1,0 +1,16 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "This project showcases the development of a full-stack e-commerce application, built with **Node.js**, **Express.js**, **Angular**, and **PostgreSQL**. The backend implements CRUD operations for sales orders and products, while the frontend provides an interactive and dynamic user interface for browsing products, making purchases, and viewing orders.",
+  "main": "index.js",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+"scripts": {
+    "install:all": "npm install --prefix ecom-client && npm install --prefix server",
+    "start": "npm run install:all && concurrently \"npm run start --prefix ecom-client\" \"npm run dev --prefix server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
