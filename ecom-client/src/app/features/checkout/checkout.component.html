@@ -1,0 +1,100 @@
+<div class="checkout-container p-4 sm:p-8 lg:p-16">
+    <button  [routerLink]="'/'">Back</button>
+    <!-- Cart Summary -->
+    <div class="cart-summary mb-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Order Summary</h2>
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-medium text-gray-600">Total Items:</span>
+          <span class="text-lg font-bold">{{ (cartItems$ | async)?.length || 0 }}</span>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-medium text-gray-600">Total Price:</span>
+          <span class="text-lg font-bold">{{ totalPrice$ | async | currency }}</span>
+        </div>
+      </div>
+  
+      <div class="mt-4">
+        <h3 class="font-bold text-lg text-gray-700">Items in Cart:</h3>
+        <div *ngFor="let item of (cartItems$ | async)" class="bg-white shadow-lg rounded-lg mb-4 p-4">
+          <div class="flex justify-between">
+            <div>
+              <h4 class="font-bold text-gray-800">{{ item.name }}</h4>
+              <p class="text-gray-600">{{ item.name }}</p>
+              <p class="text-gray-500">Quantity: {{ item.quantity }}</p>
+            </div>
+            <div>
+              <span class="font-bold text-lg text-gray-700">{{ item.price | currency }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Checkout Form -->
+    <div class="checkout-form">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Shipping Details</h2>
+      <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-600">Name</label>
+          <input
+            matInput
+            formControlName="name"
+            id="name"
+            type="text"
+            placeholder="Enter your full name"
+            class="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div *ngIf="checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched" class="text-red-500 text-xs mt-1">
+            <div *ngIf="checkoutForm.get('name')?.hasError('required')">Name is required</div>
+            <div *ngIf="checkoutForm.get('name')?.hasError('minlength')">Name must be at least 3 characters</div>
+          </div>
+        </div>
+  
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+          <input
+            matInput
+            formControlName="email"
+            id="email"
+            type="email"
+            placeholder="Enter your email address"
+            class="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div *ngIf="checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
+            <div *ngIf="checkoutForm.get('email')?.hasError('required')">Email is required</div>
+            <div *ngIf="checkoutForm.get('email')?.hasError('email')">Enter a valid email address</div>
+          </div>
+        </div>
+  
+        <div>
+          <label for="mobile" class="block text-sm font-medium text-gray-600">Mobile Number</label>
+          <input
+            matInput
+            formControlName="mobile"
+            id="mobile"
+            type="text"
+            placeholder="Enter your mobile number"
+            class="w-full p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div *ngIf="checkoutForm.get('mobile')?.invalid && checkoutForm.get('mobile')?.touched" class="text-red-500 text-xs mt-1">
+            <div *ngIf="checkoutForm.get('mobile')?.hasError('required')">Mobile number is required</div>
+            <div *ngIf="checkoutForm.get('mobile')?.hasError('pattern')">Enter a valid 10-digit mobile number</div>
+          </div>
+        </div>
+  
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!checkoutForm.valid"
+          class="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Place Order
+        </button>
+      </form>
+    </div>
+  </div>
+  
+
+  

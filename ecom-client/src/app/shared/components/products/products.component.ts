@@ -1,11 +1,9 @@
-
-
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrl: './products.component.scss'
+  styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent {
   products = [
@@ -17,6 +15,8 @@ export class ProductsComponent {
   ];
 
   cart: any = [];
+
+  @Output() cartUpdated: EventEmitter<any> = new EventEmitter();
 
   // Increase quantity
   increaseQuantity(product: any) {
@@ -32,14 +32,19 @@ export class ProductsComponent {
 
   // Add product to the cart
   addToCart(product: any) {
-    const cartItem: any = this.cart.find((item: any) => item.id === product.id);
-    if (cartItem) {
-      cartItem.quantity += product.quantity;
+    if (product.quantity > 0) {
+      const cartItem = this.cart.find((item: any) => item.id === product.id);
+      if (cartItem) {
+        cartItem.quantity += product.quantity;
+      } else {
+        this.cart.push({ ...product, quantity: product.quantity });
+      }
+      // Emit the cart data to parent or other consumers
+      this.cartUpdated.emit({ id: product.id, name: product.name, price: product.price, quantity: product.quantity });
+      product.quantity = 0; // Reset quantity after adding to cart
     } else {
-      this.cart.push({ ...product });
+      console.log('Please increase quantity before adding to cart');
     }
-    product.quantity = 0; // Reset quantity after adding to cart
-    console.log('Cart:', this.cart);
+    console.log('Updated Cart:', this.cart);
   }
 }
-
