@@ -2,7 +2,7 @@ import { Table, Column, Model, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo 
 import { SalesOrder } from './salesOrder.model';
 import { MasterProduct } from './masterProduct.model';
 
-@Table
+@Table({tableName: "SaleLineItems"})
 export class OrderProduct extends Model<OrderProduct> {
   @PrimaryKey
   @AutoIncrement

@@ -1,7 +1,7 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
 import { OrderProduct } from './salesOrderProduct.model';
 
-@Table({tableName: "TestOrder"})
+@Table({tableName: "SalesOrder"})
 export class SalesOrder extends Model<SalesOrder> {
   @PrimaryKey
   @AutoIncrement

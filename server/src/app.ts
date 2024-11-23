@@ -1,5 +1,9 @@
 import { InversifyExpressServer } from 'inversify-express-utils';
 import * as express from 'express';
+
+import * as dotenv from 'dotenv';
+dotenv.config();  // Load environment variables before anything else
+
 import { container } from './inversify.config';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 import './controllers/salesOrder.controller';

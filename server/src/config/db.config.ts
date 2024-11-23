@@ -10,13 +10,13 @@ let sequelize: Sequelize;
 
 export const connectDb = async () => {
   try {
+    
     // Step 1: Initialize Sequelize with the default 'postgres' database
     const postgresSequelize = new Sequelize({
       dialect: 'postgres',
-      host: 'localhost',
-      username: 'root',
-      password: 'yourpassword', // Use your actual password
-      database: 'postgres',     // Connect to 'postgres' to check/create 'ecom'
+      host: process.env.HOST_DB,
+      username: process.env.DB_USER,
+      database: process.env.PRIMARY_DB,     // Connect to 'postgres' to check/create 'ecom'
       logging: false,           // Disable logging for production
     });
 
@@ -32,13 +32,14 @@ export const connectDb = async () => {
       console.log('Database "ecom" created successfully');
     }
 
+    console.log(process.env.HOST_DB , )
+
     // Step 4: Initialize Sequelize with the 'ecom' database
     sequelize = new Sequelize({
       dialect: 'postgres',
-      host: 'localhost',
-      username: 'root',
-      password: 'yourpassword', // Use your actual password
-      database: 'ecom',         // Use 'ecom' database now
+      host: process.env.HOST_DB,
+      username: process.env.DB_USER,
+      database: process.env.DB_NAME,   
       models: [SalesOrder, OrderProduct, MasterProduct , Integration],
       logging: false,            // Enable logging for development
     });
