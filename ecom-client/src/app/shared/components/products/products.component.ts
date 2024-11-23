@@ -1,9 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Product } from '../../models/product';
 import { ProductService } from './products.service';
-import { Observable, shareReplay } from 'rxjs';
+import { finalize, Observable, shareReplay } from 'rxjs';
 import { ProductResponse } from '../../../types/product.type';
-import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -15,7 +13,7 @@ export class ProductsComponent implements OnInit {
   products$: Observable<ProductResponse> = new Observable<ProductResponse>();  // Declare as Observable
   pageSize: number = 4; // Default page size
   pageIndex: number = 0; // Default page index
-
+  loading = false
   @Output() cartUpdated: EventEmitter<any> = new EventEmitter();
 
   constructor(public productService: ProductService , private toastr : ToastrService) {}
@@ -27,10 +25,13 @@ export class ProductsComponent implements OnInit {
 
   // Method to load products with pagination
   loadProducts(pageIndex: number = this.pageIndex, pageSize: number = this.pageSize): void {
-    this.products$ = this.productService.getProducts(pageIndex + 1, pageSize)
-    .pipe(
-      shareReplay(1)  // Share the same result with multiple subscribers
-    ); // API uses 1-based index
+    this.loading = true; // Set loading to true before API call
+    this.products$ = this.productService
+      .getProducts(pageIndex + 1, pageSize) // API uses 1-based index
+      .pipe(
+        shareReplay(1), // Share the same result with multiple subscribers
+        finalize(() => (this.loading = false)) // Turn off loading state after API call
+      );
   }
 
   // Handle pagination change

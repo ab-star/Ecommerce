@@ -1,42 +1,67 @@
 <div class="product-container p-10">
-  <!-- Product Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-    <!-- If products are found -->
-    <div *ngFor="let product of (products$ | async)?.data?.products" 
-         class="product-card" 
-         [ngClass]="{ 'blurred': product.stock <= 0 }">
-      <mat-card class="w-full">
-        <img mat-card-image src="hero2.jpg">
-        
+  <!-- Skeleton Loader: Visible when loading is true -->
+  <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Simulate multiple skeleton cards -->
+    <div *ngFor="let skeleton of [1, 2, 3, 4]" class="product-card">
+      <mat-card class="w-full animate-pulse">
+        <div class="skeleton-image bg-gray-300 h-40"></div>
         <mat-card-content>
-          <h3>{{ product.name }}</h3>
-          <p>{{ product.description }}</p>
-          <p><strong>Price: {{ product.price | currency }}</strong></p>
-          
-          <!-- Add to Cart Button -->
-          <div class="mt-3">
-            <button (click)="addToCart(product)" 
-                    [disabled]="product.stock <= 0" 
-                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Add to Cart
-            </button>
-          </div>
+          <div class="skeleton-title bg-gray-300 h-6 my-2"></div>
+          <div class="skeleton-text bg-gray-300 h-4 my-2 w-3/4"></div>
+          <div class="skeleton-text bg-gray-300 h-4 my-2 w-1/2"></div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
 
-  <!-- Show "No products found" if no products are available -->
-  <div *ngIf="!(products$ | async)?.data?.products?.length" class="text-center my-5 text-gray-500 mt-5">
-    <span>No products found</span>
+  <!-- Product Grid: Visible when loading is false -->
+  <div *ngIf="!loading">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- If products are found -->
+      <div
+        *ngFor="let product of (products$ | async)?.data?.products"
+        class="product-card"
+        [ngClass]="{ 'blurred': product.stock <= 0 }"
+      >
+        <mat-card class="w-full">
+          <img mat-card-image src="hero2.jpg" />
+
+          <mat-card-content>
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p><strong>Price: {{ product.price | currency }}</strong></p>
+
+            <!-- Add to Cart Button -->
+            <div class="mt-3">
+              <button
+                (click)="addToCart(product)"
+                [disabled]="product.stock <= 0"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Show "No products found" if no products are available -->
+    <div
+      *ngIf="!(products$ | async)?.data?.products?.length"
+      class="text-center my-5 text-gray-500 mt-5"
+    >
+      <span>No products found</span>
+    </div>
   </div>
 
   <!-- Pagination -->
-  <app-paginator 
-    [totalItems]="(products$ | async)?.data?.total || 0" 
+  <app-paginator
+    [totalItems]="(products$ | async)?.data?.total || 0"
     [pageIndex]="pageIndex"
     [pageSize]="pageSize"
     [pageSizeOptions]="[4, 10, 15]"
-    (pageChanged)="onPageChange($event)">
+    (pageChanged)="onPageChange($event)"
+  >
   </app-paginator>
 </div>
