@@ -1,27 +1,36 @@
-import { Table, Column, Model, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  PrimaryKey,
+  AutoIncrement,
+  Unique,
+  DataType,
+} from 'sequelize-typescript';
 
 @Table
 export class MasterProduct extends Model<MasterProduct> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column({ allowNull: false })
   id!: number;
 
-  @Column
+  @Column({ allowNull: false })
   name!: string;
 
-  @Column
+  @Column({ allowNull: false, type: DataType.FLOAT })
   price!: number;
 
-  @Column
+  @Column({ allowNull: false })
   description!: string;
 
-  @Column
+  @Unique
+  @Column({ allowNull: false })
   email!: string;
 
-  @Column
+  @Column({ allowNull: false, type: DataType.INTEGER })
   stock!: number; // Available stock
   
-  @Column({ defaultValue: false })
-  isInternal!: boolean; // created internally, defaults to false if not provided
+  @Column({ allowNull: false, defaultValue: false })
+  isInternal!: boolean; // Created internally, defaults to false if not provided
 }

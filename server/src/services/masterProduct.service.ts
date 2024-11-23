@@ -7,7 +7,7 @@ import { GENERIC_ERROR_MESSAGE } from '../constants/error.constants';
 
 
 const PRODUCTSERVICE_ERROS = {
-  DUPLICATE_ERROR: "This product already exists"
+  DUPLICATE_ERROR: "This product already exists for this user"
 }
 
 export class MasterProductService {
@@ -16,7 +16,7 @@ export class MasterProductService {
   ) { }
 
   // Create a new master product
-  public async createMasterProduct(masterProductData: MasterProductType) {
+  public async createMasterProduct(masterProductData: MasterProductType , isInternal = false) {
     try {
       const existingProduct = await this.masterProductRepository.findProductByNameAndEmail(
         masterProductData.name,
@@ -28,7 +28,7 @@ export class MasterProductService {
       }
 
       // Proceed with creating the product if no duplicates
-      const masterProduct = await this.masterProductRepository.createMasterProduct(masterProductData);
+      const masterProduct = await this.masterProductRepository.createMasterProduct(masterProductData , isInternal);
       return masterProduct
     } catch (error) {
       throw new ServiceError(GENERIC_ERROR_MESSAGE, error)
@@ -37,17 +37,21 @@ export class MasterProductService {
 
   // Get master products with dynamic filtering and pagination
   public async getMasterProducts(page: number, pageSize: number, isInternal = false) {
-    const offset = (page - 1) * pageSize;
-    const limit = pageSize;
-
-    const result = await this.masterProductRepository.getMasterProducts(offset, limit, isInternal);
-    return result;
+    try {
+      const offset = (page - 1) * pageSize;
+      const limit = pageSize;
+  
+      const result = await this.masterProductRepository.getMasterProducts(offset, limit, isInternal);
+      return result;
+    } catch (error) {
+      throw new ServiceError(GENERIC_ERROR_MESSAGE, error)
+    }
   }
 
   // Update an existing master product
-  public async updateMasterProduct(id: string, updateData: any) {
+  public async updateMasterProduct(id: string, updateData: any , isInternal=false) {
     try {
-      const masterProduct = await this.masterProductRepository.updateMasterProduct(id, updateData);
+      const masterProduct = await this.masterProductRepository.updateMasterProduct(id, updateData , isInternal);
       return masterProduct;
     } catch (error) {
       throw new ServiceError(GENERIC_ERROR_MESSAGE, error)
@@ -55,10 +59,9 @@ export class MasterProductService {
   }
 
   // Delete a master product
-  public async deleteMasterProduct(id: string) {
+  public async deleteMasterProduct(id: string , isInternal=false) {
     try {
-      await this.masterProductRepository.deleteMasterProduct(id);
-
+      return await this.masterProductRepository.deleteMasterProduct(id , isInternal);
     } catch (error) {
       throw new ServiceError(GENERIC_ERROR_MESSAGE, error)
 

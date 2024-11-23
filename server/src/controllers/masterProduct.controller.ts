@@ -8,7 +8,7 @@ import { ApiError } from '../dtos/error.dto';
 import { MasterProductPathSchema, MasterProductQuerySchema, MasterProductSchema, MasterProductType } from '../schemas/masterProduct.schema';
 import { NextFunction, Response, Request } from 'express';
 
-@controller('/api/master-products')
+@controller('/api/products')
 export class MasterProductController {
   constructor(
     @inject(TYPES.MasterProductService) private masterProductService: MasterProductService
@@ -36,15 +36,11 @@ export class MasterProductController {
       const result = await this.masterProductService.getMasterProducts(page, limit);
       res.status(200).json(new ApiResponse(true, 'Master products retrieved successfully', result));
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        res.status(500).json(new ApiError('Error retrieving master products', [{ message: error.message }]));
-      } else {
-        res.status(500).json(new ApiError('Unknown error occurred', [{ message: 'An unknown error occurred' }]));
-      }
+      next(error)
     }
   }
 
-  @httpPut('/:id', validateRequest({ params: MasterProductPathSchema }))
+  @httpPut('/:id', validateRequest({ params: MasterProductPathSchema , body: MasterProductSchema }))
   public async updateMasterProduct(
     @requestBody() payload: MasterProductType,
     @requestParam("id") id: string,
@@ -69,11 +65,7 @@ export class MasterProductController {
       await this.masterProductService.deleteMasterProduct(id);
       res.status(200).json(new ApiResponse(true, 'Master product deleted successfully'));
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        res.status(500).json(new ApiError('Error deleting master product', [{ message: error.message }]));
-      } else {
-        res.status(500).json(new ApiError('Unknown error occurred', [{ message: 'An unknown error occurred' }]));
-      }
+      next(error)
     }
   }
 }

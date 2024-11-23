@@ -1,5 +1,5 @@
 // Middlewares/determineAccess.middleware.ts
-export const determineAccessType = (isInternal: boolean) => {
+export const determineInternalAccessType = (isInternal: boolean) => {
   return (req: any, res: any, next: any) => {
     // If it's an internal route, check the API key first
     if (isInternal) {

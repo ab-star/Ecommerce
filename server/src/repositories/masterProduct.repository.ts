@@ -6,9 +6,14 @@ import { MasterProductType } from '../schemas/masterProduct.schema';
 
 export class MasterProductRepository {
   // Create a new master product
-  public async createMasterProduct(masterProductData: MasterProductType) {
+  public async createMasterProduct(masterProductData: MasterProductType , isInternal=false) {
     try {
+      
       const data = masterProductData as CreationAttributes<MasterProduct>;
+
+      if(isInternal){
+        data.isInternal = true
+      }
       // Attempt to create the new master product
       const newProduct = await MasterProduct.create(data);
       return newProduct;
@@ -51,12 +56,18 @@ export class MasterProductRepository {
   }
 
   // Update a master product
-  public async updateMasterProduct(id: string, updateData: MasterProductType) {
+  public async updateMasterProduct(id: string, updateData: MasterProductType , isInternal=false) {
     try {
       // Try to update the record
+
+      const whereCond = {
+        id,
+        isInternal
+      }
+
       const [updatedRowCount, updatedMasterProduct] = await MasterProduct.update(
         updateData,
-        { where: { id }, returning: true }
+        { where: whereCond, returning: true }
       );
   
       if (updatedRowCount === 0) {
@@ -76,11 +87,17 @@ export class MasterProductRepository {
   }  
 
   // Delete a master product
-  public async deleteMasterProduct(id: string) {
+  public async deleteMasterProduct(id: string , isInternal=false) {
     try {
       // Try to delete the record
+
+      const whereCond = {
+        id ,
+        isInternal
+      }
+
       const deletedRowCount = await MasterProduct.destroy({
-        where: { id },
+        where: whereCond,
       });
   
       if (deletedRowCount === 0) {

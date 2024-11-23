@@ -23,7 +23,7 @@ export class IntegrationController {
       const integration = await this.integrationService.createOrReplaceIntegration(apiUrl, apiToken);
       res.status(201).json({ message: 'Integration created/replaced successfully', integration });
     } catch (error) {
-      return next(error); // Passing service-level errors to error handler
+      return next(error); 
     }
   }
 
