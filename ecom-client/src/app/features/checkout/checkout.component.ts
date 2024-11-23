@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CartItem } from '../../store/cart/cart.state';
 import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from '../../store/cart/cart.actions';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
 import { CheckoutService } from '../../core/services/checkout.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -16,9 +17,10 @@ export class CheckoutComponent implements OnInit {
   checkoutForm!: FormGroup;
   cartItems$: Observable<CartItem[]>;
   totalPrice$: Observable<number>;
+  cartItems: CartItem[] = []; // Holds the real-time cart items
+  subscription: Subscription = new Subscription();
 
-  constructor(private fb: FormBuilder, private store: Store , private checkOutService: CheckoutService) {
-    // Use selectors to get the state
+  constructor(private fb: FormBuilder, private store: Store, private checkOutService: CheckoutService , private router: Router) {
     this.cartItems$ = this.store.select(selectCartItems);
     this.totalPrice$ = this.store.select(selectCartTotal);
   }
@@ -27,19 +29,40 @@ export class CheckoutComponent implements OnInit {
     this.checkoutForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      mobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
     });
+
+    // Subscribe to the cart items observable
+    this.subscription.add(
+      this.cartItems$.subscribe((items) => {
+        this.cartItems = items;
+        this.validateCart(); // Custom method to check if there's at least one item
+      })
+    );
+  }
+
+  validateCart() {
+    if (this.cartItems.length === 0) {
+      this.checkoutForm.setErrors({ noItems: true }); // Set form-level error
+    } else {
+      this.checkoutForm.setErrors(null); // Clear the error
+    }
   }
 
   onSubmit(): void {
     if (this.checkoutForm.valid) {
-      console.log('Order Placed:', {
-        userDetails: this.checkoutForm.value,
-        cart: this.cartItems$,
-      });
-      alert('Order placed successfully!');
+      let headerPayload = this.checkoutForm.value
+      let payload = {
+        ...headerPayload,
+        products: this.cartItems?.map((item)=>{
+          return {productId: item.id , quantity: item.quantity}
+        })
+      }
+      this.checkOutService.createOrder(payload).subscribe((item)=>{
+        this.router.navigate(['/']);
+      })
     } else {
-      alert('Please fill out all required fields!');
+      alert('Please fill out all required fields and ensure your cart has items!');
     }
   }
 

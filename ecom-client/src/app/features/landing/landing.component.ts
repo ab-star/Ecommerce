@@ -15,7 +15,7 @@ export class LandingComponent {
   onAddToCart(product: any) {
     this.store.dispatch(addItemToCart({
       id: product.id,
-      quantity: product.quantity,
+      quantity: 1,
       price: product.price,
       name: product.name,
     }));

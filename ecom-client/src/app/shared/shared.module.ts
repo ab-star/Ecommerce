@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductsComponent } from './components/products/products.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
-    MatGridListModule
+    MatGridListModule,
+    RouterModule
   ],
   exports: [
     HeroComponent,   // Export HeroComponent

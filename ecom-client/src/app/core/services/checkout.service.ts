@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { OrderRequest } from '../../types/order.type';
-import { catchError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CheckoutService {
 
-  baseUrl = "/sales-order"
-  constructor(private apiService: ApiService) { }
+  baseUrl = "sales-orders"
+  OUT_OF_STOCK_ERR = "Out_Of_Stock"
+  constructor(private apiService: ApiService , private snackBar: MatSnackBar) { }
 
-  createOrder(req: OrderRequest){
-    return this.apiService.post(this.baseUrl, req)
-    // .pipe(catchError((err: any)=>{
-    //     if(err.statusCode == 400 && err.errorCodeType == "Out_ofStock"){
-
-    //     }
-    // }))
+  createOrder(req: OrderRequest) {
+    return this.apiService.post(this.baseUrl, req).pipe(
+      catchError((err: any) => {
+        
+        // Re-throw the error for further handling if necessary
+        return throwError(() => err);
+      })
+    );
   }
 }
