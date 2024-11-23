@@ -8,49 +8,71 @@ import { OutOfStockError, RepositoryError } from '../utils/errorCategory';
 import { GENERIC_ERROR_MESSAGE, REPOSITORY_ERRORS } from '../constants/error.constants';
 
 export class SalesOrderRepository {
-  public async createSalesOrder({ name, email, mobileNumber , products }: SalesOrderData) {
-      return sequelize.transaction(async (transaction) => {
+  public async createSalesOrder({ name, email, mobileNumber, products }: SalesOrderData): Promise<any> {
+    return sequelize.transaction(async (transaction) => {
+      try {
+        // Create the sales order
+        const salesPayload = {
+          name,
+          email,
+          mobileNumber,
+          orderDate: new Date(),
+        } as CreationAttributes<SalesOrder>;
   
-        try {
-          const salesPayload = { name, email, mobileNumber } as CreationAttributes<SalesOrder>
-          // Create the sales order
-
-          salesPayload.orderDate = new Date()
-          const salesOrder = await SalesOrder.create(salesPayload, { transaction });
-    
-          for (const product of products) {
-            const masterProduct = await MasterProduct.findByPk(product.productId, { transaction });
-    
-            if (!masterProduct) throw new ValidationError(`Product with ID ${product.productId} not found` , []);
-              if (masterProduct.stock < product.quantity) throw new OutOfStockError(`Insufficient stock for product: ${masterProduct.name}`);
-    
-            // Deduct stock
-            masterProduct.stock -= product.quantity;
-            await masterProduct.save({ transaction });
-    
-            const orderProductPayload = {
-              salesOrderId: salesOrder.id,
-              productId: product.productId,
-              quantity: product.quantity,
-              price: product.quantity * masterProduct.price,
-            } as CreationAttributes<OrderProduct>
-    
-            // Add the product to the order
-            await OrderProduct.create(
-              orderProductPayload,
-              { transaction }
-            );
+        const salesOrder = await SalesOrder.create(salesPayload, { transaction });
+  
+        const lineItems: any[] = []; // Initialize an array to build line items
+  
+        for (const product of products) {
+          const masterProduct = await MasterProduct.findByPk(product.productId, { transaction });
+  
+          if (!masterProduct) {
+            throw new ValidationError(`Product with ID ${product.productId} not found`, []);
           }
-    
-          return salesOrder;
-        } catch (error) {
-          if(error instanceof OutOfStockError || error instanceof ValidationError){
-            throw error
+  
+          if (masterProduct.stock < product.quantity) {
+            throw new OutOfStockError(`Insufficient stock for product: ${masterProduct.name}`);
           }
-          throw new RepositoryError(GENERIC_ERROR_MESSAGE , error)
+  
+          // Deduct stock
+          masterProduct.stock -= product.quantity;
+          await masterProduct.save({ transaction });
+  
+          // Create the order product entry
+          const orderProductPayload = {
+            salesOrderId: salesOrder.id,
+            productId: product.productId,
+            quantity: product.quantity,
+            price: product.quantity * masterProduct.price, // Total price for the product
+          } as CreationAttributes<OrderProduct>;
+  
+          await OrderProduct.create(orderProductPayload, { transaction });
+  
+          // Build line item using existing data
+          lineItems.push({
+            productName: masterProduct.name,
+            quantity: product.quantity,
+            price: product.quantity * masterProduct.price,
+            originalPrice: masterProduct.price,
+          });
         }
-      });
-     
+  
+        // Return the sales order with line items
+        return {
+          headers: {id: salesOrder.id,
+          name: salesOrder.name,
+          email: salesOrder.email,
+          mobileNumber: salesOrder.mobileNumber,
+          orderDate: salesOrder.orderDate},
+          lineItems,
+        };
+      } catch (error) {
+        if (error instanceof OutOfStockError || error instanceof ValidationError) {
+          throw error;
+        }
+        throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
+      }
+    });
   }
 
   public async getSalesOrders(filters: any) {

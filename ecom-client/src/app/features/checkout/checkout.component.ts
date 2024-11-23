@@ -62,12 +62,4 @@ export class CheckoutComponent implements OnInit {
     this.store.dispatch(removeItemFromCart({ id: item.id }));
   }
 
-  orderCreate(){
-    const reqBody = {...this.checkoutForm.value}
-    reqBody.products = this.cartItems$.map((item)=>{
-      return {productId: item.id , quantity: item.quantity}
-    })
-
-    this.checkOutService.createOrder(req)
-  }
 }

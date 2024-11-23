@@ -60,16 +60,14 @@ export class SalesOrderService {
   }
 
   private prepareIntegrationPayload(salesOrder: any) {
-    const lineItems = salesOrder.products.map((product: any) => ({
+    const lineItems = salesOrder.lineItems.map((product: any) => ({
       productName: product.name,
       quantity: product.quantity,
       price: product.price,
     }));
 
     return {
-      name: salesOrder.name,
-      email: salesOrder.email,
-      mobileNumber: salesOrder.mobileNumber,
+      headers: salesOrder.headers,
       lineItems,
     };
   }
