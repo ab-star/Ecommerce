@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { CartItem } from '../../store/cart/cart.state'
-import { addItemToCart } from '../../store/cart/cart.actions';
+import { CartItem } from '../../store/cart/cart.state';
+import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from '../../store/cart/cart.actions';
+import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
 
 @Component({
   selector: 'app-checkout',
@@ -15,13 +16,10 @@ export class CheckoutComponent implements OnInit {
   cartItems$: Observable<CartItem[]>;
   totalPrice$: Observable<number>;
 
-  constructor(private fb: FormBuilder, private store: Store<{ cart: { items: CartItem[] } }>) {
-    this.cartItems$ = this.store.select((state) => state.cart.items)
-    this.store.select((state) => state.cart.items).subscribe((item)=>console.log(item , 'aaaadddd disp'));
-    console.log(this.cartItems$ , 'carttttt')
-    this.totalPrice$ = this.store.select((state) =>
-      state.cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-    );
+  constructor(private fb: FormBuilder, private store: Store) {
+    // Use selectors to get the state
+    this.cartItems$ = this.store.select(selectCartItems);
+    this.totalPrice$ = this.store.select(selectCartTotal);
   }
 
   ngOnInit(): void {
@@ -44,5 +42,22 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
- 
+  // Increase quantity
+  increaseQuantity(item: CartItem) {
+    const updatedItem = { ...item, quantity: item.quantity + 1 };
+    this.store.dispatch(updateCartItemQuantity({ id: item.id, quantity: updatedItem.quantity }));
+  }
+
+  // Decrease quantity
+  decreaseQuantity(item: CartItem) {
+    if (item.quantity > 1) {
+      const updatedItem = { ...item, quantity: item.quantity - 1 };
+      this.store.dispatch(updateCartItemQuantity({ id: item.id, quantity: updatedItem.quantity }));
+    }
+  }
+
+  // Remove item from cart
+  removeItem(item: CartItem) {
+    this.store.dispatch(removeItemFromCart({ id: item.id }));
+  }
 }

@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { addItemToCart, removeItemFromCart, updateItemQuantity, clearCart } from './cart.actions';
+import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from './cart.actions';
 import { initialState } from './cart.state';
 
 export const cartReducer = createReducer(
@@ -45,7 +45,7 @@ export const cartReducer = createReducer(
     items: state.items.filter(item => item.id !== id),
   })),
 
-  on(updateItemQuantity, (state, { id, quantity }) => {
+  on(updateCartItemQuantity, (state, { id, quantity }) => {
     return {
       ...state,
       items: state.items.map(item =>
@@ -60,8 +60,4 @@ export const cartReducer = createReducer(
     };
   }),
 
-  on(clearCart, state => ({
-    ...state,
-    items: [],
-  }))
 );

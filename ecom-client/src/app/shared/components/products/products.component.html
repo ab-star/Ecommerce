@@ -9,13 +9,6 @@
             <p>{{ product.description }}</p>
             <p><strong>Price: {{ product.price | currency }}</strong></p>
   
-            <!-- Quantity Control -->
-            <div class="flex items-center space-x-2 mt-2">
-              <button (click)="decreaseQuantity(product)" class="px-3 py-1 bg-gray-200 rounded-full">-</button>
-              <span>{{ product.quantity || 0 }}</span> <!-- Display the current quantity -->
-              <button (click)="increaseQuantity(product)" class="px-3 py-1 bg-gray-200 rounded-full">+</button>
-            </div>
-  
             <!-- Add to Cart Button -->
             <div class="mt-3">
               <button (click)="addToCart(product)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
