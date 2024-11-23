@@ -1,0 +1,45 @@
+.carousel-container {
+    position: relative;
+    width: 100%;   /* Take up full width of the parent container */
+    height: calc(100vh - 5.5rem); /* You can change the height as per your needs */
+    overflow: hidden;
+  }
+  
+  .carousel-images {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* Slide transition */
+    width: 100%;   /* Ensure the container is stretched */
+  }
+  
+  .carousel-image {
+    width: 100%;  /* Each image will take 100% of the carousel's width */
+    height: 100%; /* Height will be adjusted based on the parent height */
+    object-fit: contain; /* Ensure the whole image is visible without cropping */
+  }  
+  
+  .carousel-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 20px;
+  }
+  
+  button {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+
+  

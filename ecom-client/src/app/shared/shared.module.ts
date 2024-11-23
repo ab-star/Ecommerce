@@ -13,6 +13,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterModule } from '@angular/router';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { FormsModule } from '@angular/forms';
+import { CustomCarouselComponent } from './components/custom-carousel/custom-carousel.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     ProductsComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    CustomCarouselComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { FormsModule } from '@angular/forms';
     RouterModule
   ],
   exports: [
+    CustomCarouselComponent,
     HeroComponent,   // Export HeroComponent
     HeaderComponent,
     FooterComponent,

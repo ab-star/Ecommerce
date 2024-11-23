@@ -1,8 +1,10 @@
 <app-header></app-header>
 
-<div class="relative w-full h-[calc(100vh-4rem)]">
+<app-custom-carousel></app-custom-carousel>
+
+<!-- <div class="relative w-full h-[calc(100vh-4rem)]">
   <img src="hero1.jpg" alt="Hero Image" class="object-cover w-full h-full">
-</div>
+</div> -->
 
 <app-products (cartUpdated)="onAddToCart($event)"></app-products> 
 
