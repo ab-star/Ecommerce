@@ -35,16 +35,18 @@ export class MasterProductRepository {
     offset: number,
     limit: number,
     filters: { name?: string; email?: string; priceRange?: { min?: number; max?: number } },
+    orderBy?: 'price' | 'createdDate',  // New parameter for sorting
+    orderDirection: 'ASC' | 'DESC' = 'ASC',  // Default to ascending if not provided
     isInternal = false
   ) {
     try {
       const whereFilter: { [key: string]: any } = {};
-
+  
       // Apply filters dynamically
-      if(isInternal){
-        whereFilter.isInternal = isInternal
+      if (isInternal) {
+        whereFilter.isInternal = isInternal;
       }
-
+  
       if (filters.name) {
         whereFilter.name = { [Op.iLike]: `%${filters.name}%` }; // Case-insensitive search
       }
@@ -52,7 +54,7 @@ export class MasterProductRepository {
         whereFilter.email = { [Op.iLike]: `%${filters.email}%` }; // Case-insensitive search
       }
       if (filters.priceRange) {
-        const priceConditions: { [Op.gte]?: number;[Op.lte]?: number } = {};
+        const priceConditions: { [Op.gte]?: number; [Op.lte]?: number } = {};
         if (filters.priceRange.min !== undefined) {
           priceConditions[Op.gte] = filters.priceRange.min;
         }
@@ -61,22 +63,31 @@ export class MasterProductRepository {
         }
         whereFilter.price = priceConditions;
       }
-
-      // Fetch paginated results
+  
+      // Build the sorting order
+      let order: [string, string][] = [];
+      if (orderBy === 'price') {
+        order = [['price', orderDirection]];
+      } else if (orderBy === 'createdDate') {
+        order = [['createdAt', orderDirection]]; // Assuming created date is stored in 'createdAt'
+      }
+  
+      // Fetch paginated and sorted results
       const products = await MasterProduct.findAll({
         where: whereFilter,
         limit,
         offset,
+        order,  // Apply the sorting order
       });
-
+  
       // Get the total count of products (for pagination metadata)
       const total = await MasterProduct.count({ where: whereFilter });
-
+  
       return { products, total };
     } catch (error: any) {
       throw new RepositoryError('Failed to fetch master products', error);
     }
-  }
+  }  
 
 
   // Update a master product

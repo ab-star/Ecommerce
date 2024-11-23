@@ -25,21 +25,6 @@ export class InternalMasterProductController {
     }
   }
 
-  // @httpGet('/', determineInternalAccessType(true), validateRequest({ query: MasterProductQuerySchema }))
-  // public async getMasterProducts(
-  //   @request() req: Request,
-  //   @queryParam('page') page: number,
-  //   @queryParam('limit') limit: number,
-  //   @response() res: Response,
-  //   @next() next: NextFunction) {
-  //   try {
-  //     const result = await this.masterProductService.getMasterProducts(page, limit , true);
-  //     res.status(200).json(new ApiResponse(true, 'Master products retrieved successfully', result));
-  //   } catch (error: unknown) {
-  //     next(error)
-  //   }
-  // }
-
   @httpGet('/', determineInternalAccessType(true), validateRequest({ query: MasterProductQuerySchema }))
   public async getMasterProducts(
     @request() req: Request,
@@ -49,21 +34,23 @@ export class InternalMasterProductController {
     @queryParam('limit') limit: number,
     @queryParam('name') name?: string,
     @queryParam('email') email?: string,
-    @queryParam('minPrice') minPrice?: string, // Allow as string for parsing
-    @queryParam('maxPrice') maxPrice?: string
+    @queryParam('minPrice') minPrice?: string,
+    @queryParam('maxPrice') maxPrice?: string,
+    @queryParam('orderBy') orderBy?: 'price' | 'createdDate',  // New query param for sorting
+    @queryParam('orderDirection') orderDirection?: 'ASC' | 'DESC'  // New query param for sorting direction
   ) {
     try {
       // Parse numeric query params for minPrice and maxPrice
       const parsedMinPrice = minPrice ? parseFloat(minPrice) : undefined;
       const parsedMaxPrice = maxPrice ? parseFloat(maxPrice) : undefined;
-
-      // Build a dynamic filters object
+  
+      // Build dynamic filters object
       const filters: {
         name?: string;
         email?: string;
         priceRange?: { min?: number; max?: number };
       } = {};
-
+  
       if (name) filters.name = name;
       if (email) filters.email = email;
       if (parsedMinPrice !== undefined || parsedMaxPrice !== undefined) {
@@ -71,9 +58,16 @@ export class InternalMasterProductController {
         if (parsedMinPrice !== undefined) filters.priceRange.min = parsedMinPrice;
         if (parsedMaxPrice !== undefined) filters.priceRange.max = parsedMaxPrice;
       }
-
-      // Pass filters to the service layer
-      const result = await this.masterProductService.getMasterProducts(page, limit, filters, true);
+  
+      // Pass filters, page, limit, and sorting parameters to the service layer
+      const result = await this.masterProductService.getMasterProducts(
+        page, 
+        limit, 
+        filters,
+        orderBy, 
+        orderDirection,
+        true
+      );
       res.status(200).json(new ApiResponse(true, 'Master products retrieved successfully', result));
     } catch (error: unknown) {
       next(error);

@@ -44,21 +44,30 @@ export class MasterProductService {
       email?: string;
       priceRange?: { min?: number; max?: number };
     },
+    orderBy?: 'price' | 'createdDate',  // New parameter for sorting
+    orderDirection: 'ASC' | 'DESC' = 'ASC',  // Default to ascending if not provided
     isInternal = false
   ) {
     try {
       // Calculate offset and limit for pagination
       const offset = (page - 1) * pageSize;
       const limit = pageSize;
-
-      // Pass filters, offset, and limit to the repository
-      const result = await this.masterProductRepository.getMasterProducts(offset, limit, filters, isInternal);
+  
+      // Pass filters, pagination, and sorting parameters to the repository
+      const result = await this.masterProductRepository.getMasterProducts(
+        offset, 
+        limit, 
+        filters, 
+        orderBy, 
+        orderDirection, 
+        isInternal
+      );
       return result;
     } catch (error) {
       throw new ServiceError('Failed to retrieve master products', error);
     }
   }
-
+  
 
 
   // Update an existing master product
