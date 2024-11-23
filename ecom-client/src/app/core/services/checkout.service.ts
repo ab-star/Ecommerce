@@ -14,12 +14,6 @@ export class CheckoutService {
   constructor(private apiService: ApiService , private snackBar: MatSnackBar) { }
 
   createOrder(req: OrderRequest) {
-    return this.apiService.post(this.baseUrl, req).pipe(
-      catchError((err: any) => {
-        
-        // Re-throw the error for further handling if necessary
-        return throwError(() => err);
-      })
-    );
+    return this.apiService.post(this.baseUrl, req)
   }
 }
