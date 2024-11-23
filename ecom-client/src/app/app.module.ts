@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { StoreModuleConfig } from './store/storeconfig.module';
+import { ErrorHandlerService } from './core/error/error-handler.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { provideHttpClient } from '@angular/common/http';
 
 
 const routes: Routes = [
@@ -23,8 +26,12 @@ const routes: Routes = [
     RouterModule.forRoot(routes),  // Configure the routing in the module
     BrowserAnimationsModule,
     StoreModuleConfig,
+    MatSnackBarModule,
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorHandler, useClass: ErrorHandlerService },
+    provideHttpClient()  // Register the custom error handler\
+  ],
   bootstrap: [AppComponent]  // Bootstrap AppComponent
 })
 export class AppModule { }

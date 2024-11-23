@@ -1,7 +1,7 @@
 <div class="product-container p-10">
     <!-- Responsive Grid with Tailwind CSS -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      <div *ngFor="let product of products" class="product-card">
+      <div *ngFor="let product of (products$ | async)?.data?.products" class="product-card">
         <mat-card class="w-full">
           <img mat-card-image src="hero2.jpg">
           <mat-card-content>
@@ -22,7 +22,7 @@
   
     <!-- Pagination -->
     <mat-paginator
-      [length]="products.length"
+      [length]="(products$ | async)?.data?.total"
       [pageSize]="4"
       [pageSizeOptions]="[4, 8, 12]"
       showFirstLastButtons

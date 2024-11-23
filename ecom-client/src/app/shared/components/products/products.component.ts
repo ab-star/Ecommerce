@@ -1,19 +1,24 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Product } from '../../models/product';
+import { ProductService } from './products.service';
+import { Observable, of } from 'rxjs';
+import { ProductResponse } from '../../../types/product.type';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent {
-  products = [
-    { id: 1, name: 'Product 1', description: 'Description of Product 1', price: 10.0, quantity: 1 },
-    { id: 2, name: 'Product 2', description: 'Description of Product 2', price: 15.0, quantity: 1 },
-    { id: 3, name: 'Product 3', description: 'Description of Product 3', price: 20.0, quantity: 1 },
-    { id: 4, name: 'Product 4', description: 'Description of Product 4', price: 25.0, quantity: 1 },
-  ];
+export class ProductsComponent implements OnInit  {
+  products$: Observable<ProductResponse> = of({} as ProductResponse); ;  // Declare as Observable
+
+  constructor(public productService: ProductService){}
 
   @Output() cartUpdated: EventEmitter<any> = new EventEmitter();
+
+  ngOnInit(): void {
+    this.products$ = this.productService.getProducts(1, 4);
+  }
 
   // Emit product data when adding to cart
   addToCart(product: any) {

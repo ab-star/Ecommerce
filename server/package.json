@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@types/cors": "^2.8.17",
     "axios": "^1.7.7",
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "express-async-handler": "^1.2.0",
     "glob": "^11.0.0",
