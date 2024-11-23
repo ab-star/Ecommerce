@@ -37,7 +37,7 @@ export class SalesOrderService {
         await axios.post(integration.apiUrl, requestData, {
           headers: headerVal,
         });
-        this.salesOrderRepository.updatePublishStatus(salesOrder.id)
+        this.salesOrderRepository.updatePublishStatus(salesOrder?.headers?.id)
         isPublished = true
        } catch (error) {
         isPublished = false

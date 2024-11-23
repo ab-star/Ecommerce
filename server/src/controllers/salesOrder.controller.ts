@@ -4,7 +4,6 @@ import { SalesOrderService } from '../services/salesOrder.service';
 import { ApiResponse } from '../dtos/response.dto';
 import { validateRequest } from '../middlewares/validateRequest.middleware';
 import { TYPES } from '../types';
-import { ApiError } from '../dtos/error.dto';
 import { SalesOrderReqSchema } from '../schemas/saleOrder.schema';
 import { NextFunction } from 'express';
 

@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "87441c1e-3091-45db-b6d2-54bbf0f2a944",
+		"name": "Ecommerce",
+		"description": "StartFragment\n\nThe **e-commerce API suite** includes key modules for seamless product and sales management:\n\n1. **MasterProduct API**: Allows internal and external users to add, update, delete, and retrieve products with dynamic filtering (e.g., price, name) and pagination. Improvements could include role-based access and bulk operations.\n    \n2. **MasterProduct Internal API**: A secure version of the MasterProduct API for internal use only, protected by authentication. Audit logging and batch processing can enhance its functionality.\n    \n3. **Sales API**: Facilitates order creation and retrieval with stock validation, order record updates, and integration handling. It supports advanced filtering (e.g., date range, customer details) but could benefit from automated retry for failed integrations and detailed error tracking.\n    \n\nEndFragment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14455475"
+	},
+	"item": [
+		{
+			"name": "Integration",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"a@a.com\",\r\n    \"apiUrl\": \"aa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}}}/integrations",
+							"host": [
+								"{{baseUrl\n}}}"
+							],
+							"path": [
+								"integrations"
+							]
+						},
+						"description": "- StartFragment\n    \n    - **Create or Update**: Use the Create API endpoint to both create a new record or update the existing one. The operation automatically handles both scenarios since there’s only one record in this resource."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/integrations/a@ab.com      ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"integrations",
+								"a@ab.com      "
+							]
+						},
+						"description": "- **Delete**: Remove the record using the Delete API endpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "**View**: Fetch the single record using the appropriate endpoint to retrieve its details.EndFragment"
+					},
+					"response": []
+				}
+			],
+			"description": "This API is designed to manage a **single record**. Since the resource only allows one record, the API serves multiple purposes:EndFragment"
+		},
+		{
+			"name": "MasterProduct",
+			"item": [
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl\n}}/api/master-products?page=1&limit=10",
+							"host": [
+								"{{baseUrl\n}}"
+							],
+							"path": [
+								"api",
+								"master-products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "t**Dynamic Filtering**: Fetch product records using flexible filters such as `minPrice`, `maxPrice`, `name`, `email`, and more, enabling precise data retrieval.EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"valueProd\",\r\n    \"email\": \"test@test.com\",\r\n    \"stock\": 200,\r\n    \"price\": 300,\r\n    \"description\": \"hello this is description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}} /api/master-products",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"master-products"
+							]
+						},
+						"description": "User can create a product record by sending the following fields all fields are required"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n                \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}} /api/products/2",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"products",
+								"2"
+							]
+						},
+						"description": "User can update a product record by sending the following fields all fields are required"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl\n}} /api/master-products/3",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"master-products",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**MasterProduct API** is designed for integrating and managing products on the e-commerce platform. It provides the following capabilities for both internal and external users:EndFragment"
+		},
+		{
+			"name": "MasterProduct Internal",
+			"item": [
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "c17b751c-73d8-4ab2-b5e8-3d92410ad83c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl\n}}/api/internal/products/?page=1&limit=10",
+							"host": [
+								"{{baseUrl\n}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"products",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Fetches product records for internal users. Supports dynamic filtering based on criteria like `minPrice`, `maxPrice`, `name`, `email`, etc. Results are provided in a **paginated format**, ensuring efficient handling of large datasetsEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"torch\",\r\n    \"email\": \"test@test.com\",\r\n    \"stock\": 200,\r\n    \"price\": 300,\r\n    \"description\": \"hello\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}}/api/internal/products",
+							"host": [
+								"{{baseUrl\n}}"
+							],
+							"path": [
+								"api",
+								"internal",
+								"products"
+							]
+						},
+						"description": "Allows internal users to add new products to the catalog. The request body must include necessary product details, such as name, price, description, and other relevant attributes.EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"torch\",\r\n    \"email\": \"test@test.com\",\r\n    \"stock\": 500,\r\n    \"price\": 900,\r\n    \"description\": \"hello\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}} /api/internal/3",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"master-products",
+								"3"
+							]
+						},
+						"description": "Allows updating existing product records. Users can modify any field, such as price, stock quantity, or description, by providing the updated data in the request body along with the `productId`.EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "c17b751c-73d8-4ab2-b5e8-3d92410ad83c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl\n}} /api/internal/products/4",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"internal",
+								"products",
+								"4"
+							]
+						},
+						"description": "Enables internal users to delete specific products from the catalog. Requires a product identifier (`productId`) in the request to identify the record to be removed.EndFragment\n\napi key - StartFragment c17b751c-73d8-4ab2-b5e8-3d92410ad83c EndFragment"
+					},
+					"response": []
+				}
+			],
+			"description": "The **MasterProduct Internal API** functions similarly to the MasterProduct API but is specifically designed for **internal use only**. It is protected by an additional layer of security, such as an internal authentication mechanism, ensuring that only authorized internal users can access it. This API facilitates robust product management within the e-commerce platform while restricting access to internal operations.EndFragment\n\napi key\n\nStartFragment headerName - x-api-key , value -c17b751c-73d8-4ab2-b5e8-3d92410ad83c EndFragment"
+		},
+		{
+			"name": "Sale",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test\",\r\n    \"email\": \"test@c.com\",\r\n    \"mobileNumber\": \"1234566666\",\r\n    \"products\": [\r\n        {\r\n        \"productId\": 5,\r\n        \"quantity\": 50\r\n        },\r\n        {\r\n        \"productId\": 90,\r\n        \"quantity\": 500\r\n        }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl\n}} /api/sales-orders",
+							"host": [
+								"{{baseUrl\n}} "
+							],
+							"path": [
+								"api",
+								"sales-orders"
+							]
+						},
+						"description": "StartFragment\n\n- Ensures product stock is sufficient before proceeding.\n    \n- Validates the payload for required order details.\n    \n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "StartFragmentSupports advanced filtering with parameters like:\n\n- `startDate` and `endDate` for date range.\n    \n- `name`, `mobileNumber`, and `email` for customer details.\n    \n\nEndFragment"
+					},
+					"response": []
+				}
+			],
+			"description": "StartFragment\n\n### **Workflow Overview**\n\n1. **Order Creation**:\n    \n    - When an order is placed, the API validates the quantity of the product to ensure it is not out of stock.\n        \n    - After successful validation, an order record is created, and the following updates are made:\n        \n        - **Product Table**: Updates stock quantity.\n            \n        - **Sale Table**: Adds the sale record.\n            \n        - **OrderProduct Table**: Records line items associated with the order.\n            \n2. **Integration Handling**:\n    \n    - If integrations are configured, the API posts the order data to the saved integration URL.\n        \n    - If no integration URL is available or the post fails, the sale record is marked as **unpublished** for later processing.\n        \n\nEndFragment"
+		}
+	]
+}
