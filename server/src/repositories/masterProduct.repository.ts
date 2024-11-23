@@ -71,14 +71,14 @@ export class MasterProductRepository {
       );
   
       if (updatedRowCount === 0) {
-        throw new NotFoundError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id));
+        throw new ValidationError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id) , [REPOSITORY_ERRORS.RECORD_NOT_FOUND(id)]);
       }
   
       // Return the updated product if update was successful
       return updatedMasterProduct;
   
     } catch (error: any) {
-      if (error instanceof NotFoundError) {
+      if (error instanceof ValidationError) {
         throw error; // Propagate NotFoundError
       }
       // Handle any other errors, such as repository or validation errors
@@ -102,13 +102,13 @@ export class MasterProductRepository {
   
       if (deletedRowCount === 0) {
         // The record was not found at all
-        throw new NotFoundError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id));
+        throw new ValidationError(REPOSITORY_ERRORS.RECORD_NOT_FOUND(id) , [REPOSITORY_ERRORS.RECORD_NOT_FOUND(id)]);
       }
   
       // If a row was deleted, return true to indicate success
       return {message: "Deleted Succussfully"};
     } catch (error: any) {
-      if (error instanceof NotFoundError) {
+      if (error instanceof ValidationError) {
         throw error; // Propagate NotFoundError
       }
       // Handle other repository or validation errors

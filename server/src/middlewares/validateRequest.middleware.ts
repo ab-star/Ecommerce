@@ -27,13 +27,10 @@ export const validateRequest = (schemas: {
       next(); // Proceed to the next middleware if validation passes
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorDetails = error.errors.map((err) => ({
-          path: err.path.join('.'),
-          message: err.message,
-        }));
+        const errorDetails = error.errors.map((err) => (err.path.join('.') + " " + err.message));
         next(new ValidationError('Request validation failed', errorDetails));
       } else {
-        next(error);
+        next(error);  
       }
     }
   };

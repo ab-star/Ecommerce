@@ -24,7 +24,7 @@ export class MasterProductService {
       );
 
       if (existingProduct) {
-        throw new ValidationError(PRODUCTSERVICE_ERROS.DUPLICATE_ERROR , []);
+        throw new ValidationError(PRODUCTSERVICE_ERROS.DUPLICATE_ERROR , [PRODUCTSERVICE_ERROS.DUPLICATE_ERROR]);
       }
 
       // Proceed with creating the product if no duplicates
@@ -52,7 +52,7 @@ export class MasterProductService {
   public async updateMasterProduct(id: string, updateData: any , isInternal=false) {
     try {
       const masterProduct = await this.masterProductRepository.updateMasterProduct(id, updateData , isInternal);
-      return masterProduct;
+      return masterProduct[0];
     } catch (error) {
       throw new ServiceError(GENERIC_ERROR_MESSAGE, error)
     }

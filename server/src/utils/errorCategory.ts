@@ -30,6 +30,13 @@ export class ValidationError extends CustomError {
   }
 }
 
+export class OutOfStockError extends CustomError {
+
+  constructor(message: string, originalError?: Error | unknown) {
+    super(message, 400, originalError);
+  }
+}
+
 // Not Found Error Class
 export class NotFoundError extends CustomError {
   constructor(message: string, originalError?: Error | unknown) {

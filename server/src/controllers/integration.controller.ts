@@ -38,17 +38,6 @@ export class IntegrationController {
     }
   }
 
-  // Update an existing integration
-  @httpPut('/')
-  async updateIntegration(@requestBody() body: any, @response() res: any, @next() next: any) {
-    try {
-      const { apiUrl, apiToken } = body;
-      const updatedIntegration = await this.integrationService.updateIntegration(apiUrl, apiToken);
-      res.status(200).json({ message: 'Integration updated successfully', updatedIntegration });
-    } catch (error) {
-      return next(error); // Passing service-level errors to error handler
-    }
-  }
 
   // Delete the integration
   @httpDelete('/')

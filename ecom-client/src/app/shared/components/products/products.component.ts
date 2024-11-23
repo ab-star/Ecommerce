@@ -38,16 +38,11 @@ export class ProductsComponent implements OnInit {
 
   // Emit product data when adding to cart
   addToCart(product: any) {
-    if (product.quantity > 0) {
-      this.cartUpdated.emit({ 
-        id: product.id, 
-        name: product.name, 
-        price: product.price, 
-        quantity: product.quantity 
-      });
-      product.quantity = 0; // Reset quantity after adding to cart
-    } else {
-      console.log('Please increase quantity before adding to cart');
-    }
+    this.cartUpdated.emit({ 
+      id: product.id, 
+      name: product.name, 
+      price: product.price, 
+      quantity: 0
+    });
   }
 }

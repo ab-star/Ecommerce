@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { CartItem } from '../../store/cart/cart.state';
 import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from '../../store/cart/cart.actions';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
+import { CheckoutService } from '../../core/services/checkout.service';
 
 @Component({
   selector: 'app-checkout',
@@ -16,7 +17,7 @@ export class CheckoutComponent implements OnInit {
   cartItems$: Observable<CartItem[]>;
   totalPrice$: Observable<number>;
 
-  constructor(private fb: FormBuilder, private store: Store) {
+  constructor(private fb: FormBuilder, private store: Store , private checkOutService: CheckoutService) {
     // Use selectors to get the state
     this.cartItems$ = this.store.select(selectCartItems);
     this.totalPrice$ = this.store.select(selectCartTotal);
@@ -59,5 +60,14 @@ export class CheckoutComponent implements OnInit {
   // Remove item from cart
   removeItem(item: CartItem) {
     this.store.dispatch(removeItemFromCart({ id: item.id }));
+  }
+
+  orderCreate(){
+    const reqBody = {...this.checkoutForm.value}
+    reqBody.products = this.cartItems$.map((item)=>{
+      return {productId: item.id , quantity: item.quantity}
+    })
+
+    this.checkOutService.createOrder(req)
   }
 }

@@ -34,30 +34,10 @@ export class IntegrationRepository {
   async deleteExistingIntegration() {
     try {
       const deletedRowCount = await Integration.destroy({ where: {} });
-
-      if (deletedRowCount === 0) {
-        throw new NotFoundError('No integration found to delete.');
-      }
+      return deletedRowCount ? true : false
     } catch (error: any) {
       throw new RepositoryError('Error in deleting existing integration', error);
     }
   }
 
-  // Update the existing integration
-  async updateIntegration(apiUrl: string, apiToken?: string) {
-    try {
-      const [updatedRowCount, [updatedIntegration]] = await Integration.update(
-        { apiUrl, apiToken },
-        { where: {}, returning: true }
-      );
-
-      if (updatedRowCount === 0) {
-        throw new NotFoundError('No integration to update.');
-      }
-
-      return updatedIntegration;
-    } catch (error: any) {
-      throw new RepositoryError(GENERIC_ERROR_MESSAGE, error);
-    }
-  }
 }

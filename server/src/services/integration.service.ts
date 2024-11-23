@@ -35,15 +35,6 @@ export class IntegrationService {
     }
   }
 
-  // Update the integration
-  async updateIntegration(apiUrl: string, apiToken?: string) {
-    try {
-      return await this.integrationRepository.updateIntegration(apiUrl, apiToken);
-    } catch (error: any) {
-      throw new ServiceError(GENERIC_ERROR_MESSAGE, error);
-    }
-  }
-
   // Delete the integration
   async deleteIntegration() {
     try {

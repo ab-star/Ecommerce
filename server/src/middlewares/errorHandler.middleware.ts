@@ -7,6 +7,7 @@ import {
   RepositoryError,
   ServiceError,
   ControllerError,
+  OutOfStockError,
 } from '../utils/errorCategory';
 import { GENERIC_ERROR_MESSAGE } from '../constants/error.constants';
 
@@ -22,7 +23,8 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
 
   // Determine the status code and response message
   let statusCode = 500;
-  let response = new ApiError('An unexpected error occurred');
+  let response: any = {};
+  const Out_Of_Stock = "Out_Of_Stock"
 
   if(err instanceof ServiceError){
     const errorType = err?.originalError
@@ -30,6 +32,11 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     if (errorType instanceof ValidationError) {
       statusCode = errorType.statusCode || 400; // Bad Request for validation errors
       response = new ApiError(errorType.message, errorType.details);
+    }else if (errorType instanceof OutOfStockError) {
+      statusCode = errorType.statusCode || 400; // Bad Request for validation errors
+      const respObj = new ApiError(errorType.message);
+      response = {...respObj}
+      response.errorCodeType = Out_Of_Stock
     } else if (errorType instanceof NotFoundError) {
       statusCode = errorType.statusCode || 404; // Not Found for missing resources
       response = new ApiError(errorType.message);

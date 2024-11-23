@@ -18,11 +18,11 @@ export class SalesOrder extends Model<SalesOrder> {
   mobileNumber!: string;
 
   @Column
-  status!: string;
-
-  @Column
   orderDate!: Date;
 
   @HasMany(() => OrderProduct)
   products!: OrderProduct[];
+
+  @Column({ defaultValue: false })
+  isPublished!: boolean; // Created internally, defaults to false if not provided
 }

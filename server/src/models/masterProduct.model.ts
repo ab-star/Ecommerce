@@ -24,7 +24,6 @@ export class MasterProduct extends Model<MasterProduct> {
   @Column({ allowNull: false })
   description!: string;
 
-  @Unique
   @Column({ allowNull: false })
   email!: string;
 

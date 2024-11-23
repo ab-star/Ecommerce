@@ -10,7 +10,7 @@ import { ProductResponse } from '../../../types/product.type';
   providedIn: 'root',
 })
 export class ProductService {
-  private baseUrl: string = 'master-products'; // Endpoint for fetching products
+  private baseUrl: string = 'products'; // Endpoint for fetching products
 
   constructor(private apiService: ApiService) {}
 

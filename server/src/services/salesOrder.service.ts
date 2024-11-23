@@ -4,6 +4,8 @@ import axios from 'axios';
 import { TYPES } from '../types';
 import { SalesOrderData } from '../schemas/saleOrder.schema';
 import { IntegrationRepository } from '../repositories/integration.repository';
+import { ServiceError } from '../utils/errorCategory';
+import { GENERIC_ERROR_MESSAGE } from '../constants/error.constants';
 
 export class SalesOrderService {
   constructor(
@@ -12,24 +14,49 @@ export class SalesOrderService {
   ) {}
 
   public async createSalesOrder(salesOrderData: SalesOrderData): Promise<any> {
-    // Validate and create sales order
-    const salesOrder = await this.salesOrderRepository.createSalesOrder(salesOrderData);
+   try {
+     // Validate and create sales order
+     const salesOrder: any = await this.salesOrderRepository.createSalesOrder(salesOrderData);
+ 
+     // Check if integration API exists
+     const integration = await this.integrationRepository.findIntegration();
+     let isPublished = false
 
-    // Check if integration API exists
-    // const integration = await this.integrationRepository.findIntegration();
-    // if (integration) {
-    //   // Prepare data to send to the external API
-    //   const requestData = this.prepareIntegrationPayload(salesOrder);
-    //   await axios.post(integration.apiUrl, requestData, {
-    //     headers: { Authorization: `Bearer ${integration.apiToken}` },
-    //   });
-    // }
+     if (integration) {
+       // Prepare data to send to the external API
+       const requestData = this.prepareIntegrationPayload(salesOrder);
 
-    return salesOrder;
+       let headerVal = {}
+
+       if(integration.apiToken){
+        headerVal = { Authorization: `Bearer ${integration.apiToken}` }
+       }
+
+
+       try {
+        await axios.post(integration.apiUrl, requestData, {
+          headers: headerVal,
+        });
+        this.salesOrderRepository.updatePublishStatus(salesOrder.id)
+        isPublished = true
+       } catch (error) {
+        isPublished = false
+       }
+     }
+
+     return isPublished ? salesOrder : {message: "sale created but unable to publish" , salesOrder};
+ 
+   } catch (error) {
+      throw new ServiceError(GENERIC_ERROR_MESSAGE , error)
+   }
   }
 
   public async getSalesOrders(filters: any): Promise<any> {
-    return this.salesOrderRepository.getSalesOrders(filters);
+    try {
+      return this.salesOrderRepository.getSalesOrders(filters);
+    } catch (error) {
+        throw new ServiceError(GENERIC_ERROR_MESSAGE , error)
+    }
   }
 
   private prepareIntegrationPayload(salesOrder: any) {
