@@ -6,7 +6,7 @@ export const determineInternalAccessType = (isInternal: boolean) => {
       const apiKey = req.headers['x-api-key']; // Custom header for API key
 
       // Check if the API key is missing or invalid
-      if (!apiKey || apiKey !== '12345') {
+      if (!apiKey || apiKey !== process.env.SECRET_KEY) {
         return res.status(403).json({ success: false, message: 'Forbidden: Invalid or missing API Key for internal route' });
       }
     }
