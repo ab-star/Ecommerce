@@ -1,25 +1,22 @@
 <!-- src/app/app.component.html -->
-<header class="bg-blue-600 text-white p-4 shadow-md">
+<header class="bg-transparent text-white p-4 shadow-lg fixed top-0 w-full z-10">
   <div class="container mx-auto flex justify-between items-center">
     <!-- Logo (optional) -->
     <div class="text-xl font-semibold">
-      <a href="/" class="text-white hover:text-gray-200">My Store</a>
+      <a href="/" class="text-white hover:text-gray-300">My Store</a>
     </div>
 
-    <!-- Navigation links -->
 
 
     <!-- Shopping Cart Icon -->
     <div class="relative">
       <button class="text-white" [routerLink]="'/checkout'">
-        <img src="cart.svg" alt="">
+        <img src="cart2.png" alt="Cart" class="w-6 h-6" />
       </button>
       <span *ngIf="cartItemCount$ | async as cartItemCount"
         class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5">
         {{ cartItemCount }}
       </span>
     </div>
-
   </div>
-
 </header>
