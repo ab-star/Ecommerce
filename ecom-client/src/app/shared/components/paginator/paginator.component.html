@@ -1,0 +1,18 @@
+<div class="paginator-container">
+    <button 
+      [disabled]="pageIndex === 0" 
+      (click)="onPreviousPage()"
+      class="paginator-button">Previous</button>
+  
+    <span>{{ pageIndex + 1 }} of {{ totalPages }}</span>
+  
+    <button 
+      [disabled]="pageIndex === totalPages - 1" 
+      (click)="onNextPage()"
+      class="paginator-button">Next</button>
+  
+    <select [disabled]="totalItems <= 4" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)">
+      <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+    </select>
+  </div>
+  

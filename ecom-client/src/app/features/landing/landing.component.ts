@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { addItemToCart } from '../../store/cart/cart.actions';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-landing',
@@ -9,7 +10,7 @@ import { addItemToCart } from '../../store/cart/cart.actions';
 })
 export class LandingComponent {
 
-  constructor(private store: Store) {}
+  constructor(private store: Store , private toastr: ToastrService) {}
 
   // Listen for the event emitted from Product component and dispatch to NgRx store
   onAddToCart(product: any) {

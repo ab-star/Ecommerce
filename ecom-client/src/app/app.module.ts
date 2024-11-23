@@ -10,6 +10,7 @@ import { StoreModuleConfig } from './store/storeconfig.module';
 import { ErrorHandlerService } from './core/error/error-handler.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { provideHttpClient } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 
 const routes: Routes = [
@@ -27,6 +28,11 @@ const routes: Routes = [
     BrowserAnimationsModule,
     StoreModuleConfig,
     MatSnackBarModule,
+    ToastrModule.forRoot({
+      closeButton: true, // Show close button
+      timeOut: 1000, // Default timeout is 3 seconds
+      positionClass: 'toast-top-right', // Change toast position if needed
+    })
   ],
   providers: [
     { provide: ErrorHandler, useClass: ErrorHandlerService },

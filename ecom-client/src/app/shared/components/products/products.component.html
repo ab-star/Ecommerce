@@ -1,38 +1,42 @@
 <div class="product-container p-10">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      <div *ngFor="let product of (products$ | async)?.data?.products" 
-           class="product-card" 
-           [ngClass]="{ 'blurred': product.stock <= 0 }">
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- If products are found -->
+    <div *ngFor="let product of (products$ | async)?.data?.products" 
+         class="product-card" 
+         [ngClass]="{ 'blurred': product.stock <= 0 }">
+      <mat-card class="w-full">
+        <img mat-card-image src="hero2.jpg">
         
-        <mat-card class="w-full">
-          <img mat-card-image src="hero2.jpg">
+        <mat-card-content>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <p><strong>Price: {{ product.price | currency }}</strong></p>
           
-          <mat-card-content>
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description }}</p>
-            <p><strong>Price: {{ product.price | currency }}</strong></p>
-            
-            <!-- Add to Cart Button -->
-            <div class="mt-3">
-              <button (click)="addToCart(product)" 
-                      [disabled]="product.stock <= 0" 
-                      class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                Add to Cart
-              </button>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+          <!-- Add to Cart Button -->
+          <div class="mt-3">
+            <button (click)="addToCart(product)" 
+                    [disabled]="product.stock <= 0" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Add to Cart
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
-  
-    <!-- Pagination -->
-    <mat-paginator
-      [length]="(products$ | async)?.data?.total"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[4, 10, 15]"
-      (page)="onPageChange($event)"
-    ></mat-paginator>
   </div>
-  
-  
+
+  <!-- Show "No products found" if no products are available -->
+  <div *ngIf="!(products$ | async)?.data?.products?.length" class="text-center my-5 text-gray-500 mt-5">
+    <span>No products found</span>
+  </div>
+
+  <!-- Pagination -->
+  <app-paginator 
+    [totalItems]="(products$ | async)?.data?.total || 0" 
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[4, 10, 15]"
+    (pageChanged)="onPageChange($event)">
+  </app-paginator>
+</div>

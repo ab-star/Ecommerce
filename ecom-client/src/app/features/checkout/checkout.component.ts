@@ -7,6 +7,7 @@ import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from '../..
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
 import { CheckoutService } from '../../core/services/checkout.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-checkout',
@@ -20,7 +21,9 @@ export class CheckoutComponent implements OnInit {
   cartItems: CartItem[] = []; // Holds the real-time cart items
   subscription: Subscription = new Subscription();
 
-  constructor(private fb: FormBuilder, private store: Store, private checkOutService: CheckoutService , private router: Router) {
+  constructor(private fb: FormBuilder, private store: Store,
+     private checkOutService: CheckoutService , private router: Router,
+     private toastr: ToastrService) {
     this.cartItems$ = this.store.select(selectCartItems);
     this.totalPrice$ = this.store.select(selectCartTotal);
   }
@@ -50,6 +53,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.validateCart()
     if (this.checkoutForm.valid) {
       let headerPayload = this.checkoutForm.value
       let payload = {
@@ -59,10 +63,12 @@ export class CheckoutComponent implements OnInit {
         })
       }
       this.checkOutService.createOrder(payload).subscribe((item)=>{
+        this.toastr.success("Order placed successfully")
         this.router.navigate(['/']);
       })
-    } else {
-      alert('Please fill out all required fields and ensure your cart has items!');
+    } else if(!this.checkoutForm.valid) {
+      // console.log("logged")
+      this.toastr.error("Please fill in the required fields & select one line item")
     }
   }
 

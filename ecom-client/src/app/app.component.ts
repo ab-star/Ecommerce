@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import {  Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { addItemToCart } from './store/cart/cart.actions';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+
 })
 export class AppComponent {
   title = 'ecom-client';

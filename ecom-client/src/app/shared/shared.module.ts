@@ -11,16 +11,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { ProductsComponent } from './components/products/products.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterModule } from '@angular/router';
+import { PaginatorComponent } from './components/paginator/paginator.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     HeroComponent,   // Declare HeroComponent
     HeaderComponent,
     FooterComponent,
-    ProductsComponent
+    ProductsComponent,
+    PaginatorComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
     CarouselModule,
     MatCardModule,
     MatPaginatorModule,
