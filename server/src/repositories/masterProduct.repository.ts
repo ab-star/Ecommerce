@@ -38,7 +38,7 @@ export class MasterProductRepository {
       const products = await MasterProduct.findAll({
         where: whereFilter,
         limit: pageSize,
-        offset: page * pageSize, // Calculate the offset for pagination
+        offset: page // Calculate the offset for pagination
       });
   
       // Get the total count of products (for pagination metadata)

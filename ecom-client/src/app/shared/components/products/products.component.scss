@@ -19,3 +19,14 @@
     }
   }
   
+
+  .product-card.blurred {
+    filter: blur(2px);
+    pointer-events: none;  /* Prevent clicks */
+    opacity: 2; /* Optional: to dim the product */
+  }
+  
+  .product-card .mat-card {
+    pointer-events: none; /* Prevent interactions with the card */
+  }
+  

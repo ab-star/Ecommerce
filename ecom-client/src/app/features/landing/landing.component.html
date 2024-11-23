@@ -3,7 +3,8 @@
 <div class="relative w-full h-[calc(100vh-4rem)]">
   <img src="hero1.jpg" alt="Hero Image" class="object-cover w-full h-full">
 </div>
-
+<div class="flex justify-end">
+    <button class="bg-blue-500 text-white p-3 my-2 rounded-lg" [routerLink]="'/checkout'">Add to Cart</button>
+</div>
 <app-products (cartUpdated)="onAddToCart($event)"></app-products> 
 
-<button [routerLink]="'/checkout'">Nav</button>

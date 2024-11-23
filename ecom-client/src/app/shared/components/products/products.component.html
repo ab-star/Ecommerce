@@ -1,17 +1,22 @@
 <div class="product-container p-10">
-    <!-- Responsive Grid with Tailwind CSS -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      <div *ngFor="let product of (products$ | async)?.data?.products" class="product-card">
+      <div *ngFor="let product of (products$ | async)?.data?.products" 
+           class="product-card" 
+           [ngClass]="{ 'blurred': product.stock <= 0 }">
+        
         <mat-card class="w-full">
           <img mat-card-image src="hero2.jpg">
+          
           <mat-card-content>
             <h3>{{ product.name }}</h3>
             <p>{{ product.description }}</p>
             <p><strong>Price: {{ product.price | currency }}</strong></p>
-  
+            
             <!-- Add to Cart Button -->
             <div class="mt-3">
-              <button (click)="addToCart(product)" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              <button (click)="addToCart(product)" 
+                      [disabled]="product.stock <= 0" 
+                      class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Add to Cart
               </button>
             </div>
@@ -23,9 +28,11 @@
     <!-- Pagination -->
     <mat-paginator
       [length]="(products$ | async)?.data?.total"
-      [pageSize]="4"
-      [pageSizeOptions]="[4, 8, 12]"
-      showFirstLastButtons
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[4, 10, 15]"
+      (page)="onPageChange($event)"
     ></mat-paginator>
   </div>
+  
   
