@@ -1,10 +1,10 @@
 import { SalesOrder } from '../models/salesOrder.model';
 import { OrderProduct } from '../models/salesOrderProduct.model';
 import { MasterProduct } from '../models/masterProduct.model';
-import { Op, CreationAttributes, ValidationError } from 'sequelize';
+import { Op, CreationAttributes } from 'sequelize';
 import { sequelize } from '../config/db.config';
 import { SalesOrderData } from '../schemas/saleOrder.schema';
-import { OutOfStockError, RepositoryError } from '../utils/errorCategory';
+import { OutOfStockError, RepositoryError  , ValidationError} from '../utils/errorCategory';
 import { GENERIC_ERROR_MESSAGE, REPOSITORY_ERRORS } from '../constants/error.constants';
 
 export class SalesOrderRepository {
@@ -27,7 +27,7 @@ export class SalesOrderRepository {
           const masterProduct = await MasterProduct.findByPk(product.productId, { transaction });
   
           if (!masterProduct) {
-            throw new ValidationError(`Product with ID ${product.productId} not found`, []);
+            throw new ValidationError(`Product with ID ${product.productId} not found`, [`Product with ID ${product.productId} not found`]);
           }
   
           if (masterProduct.stock < product.quantity) {

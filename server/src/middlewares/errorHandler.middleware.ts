@@ -43,7 +43,10 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
     } else if (errorType instanceof RepositoryError) {
       statusCode = errorType.statusCode || 500; // Not Found for missing resources
       response = new ApiError(errorType.message);
-    } 
+    } else {
+      statusCode =  500; // Internal Server Error for logical issues
+      response = new ApiError(GENERIC_ERROR_MESSAGE);
+    }
   } else if (err instanceof ValidationError) {
     statusCode = err.statusCode || 400; // Bad Request for validation errors
     response = new ApiError(err.message, err.details);
