@@ -27,32 +27,31 @@ Publication Status: The system can also track whether a sale was successfully pu
 
 ## Getting Started
 
-- Install **PostgreSQL** locally.
-- Clone the repository.
+**Prerequisites**
 
-*****ENVIRONMENT DETAILS****
+Before you begin, ensure that you have the following installed:
 
-HOST_DB = localhost
-DB_USER = root
-DB_NAME = ecom
-PRIMARY_DB = postgres
-SECRET_KEY = c17b751c-73d8-4ab2-b5e8-3d92410ad83c
+- **Node.js** (version >= 14.x) - [Download Node.js](https://nodejs.org/)
+- **PostgreSQL** - [Download PostgreSQL](https://www.postgresql.org/download/)
+- A **.env** file in the root directory with the necessary environment variables (explained below).
 
-******INSTALLATION & RUN*******
+**ENVIRONMENT DETAILS**
 
-Please setup the environment as mentioned for the node BE server in the server directory
+- **HOST_DB** = localhost  
+- **DB_USER** = root  
+- **DB_NAME** = ecom  
+- **PRIMARY_DB** = postgres  
+- **SECRET_KEY** = c17b751c-73d8-4ab2-b5e8-3d92410ad83c
 
-Start command -
-Staying at the root directory
+**Installation & Run**
 
-npm run start
+1. To start the application, navigate to the root directory and run the following command:
 
-automatically it reinstalls the packages and starts both ther FE & BE services locally
-FE - port 4200
-BE - Port 3000
+   ```bash
+   npm run start
 
-## Api Documentation 
-I have attached a postman collection export file prsent in the root directory
+## API Documentation
+For easy reference and testing, a Postman collection export file has been provided in the root directory. This collection contains all the necessary API endpoints and request details, enabling quick interaction with the backend services.
 
 ## Quick Note
 I tried setting up test cases for both FE & BE but due to some configuration issues
@@ -99,10 +98,6 @@ was facing some issues so in the interest of time worked on theother important p
 - **Cross-Sell Products Section**: 
   - Display at least 4 products in a grid layout.
   - Display product price and name dynamically from the backend API.
-
-## Tools and Principles Used
-
-## Tools and Principles Used
 
 ## Tools and Principles Used
 
