@@ -351,7 +351,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"description": "StartFragmentSupports advanced filtering with parameters like:\n\n- `startDate` and `endDate` for date range.\n    \n- `name`, `mobileNumber`, and `email` for customer details.\n    \n\nEndFragment"
+						"description": "StartFragmentSupports advanced filtering with parameters like:\n\n- `startDate` and `endDate` for date range.\n    \n- `name`, `mobileNumber`, and `email` for customer details.\n also `isPublished - true/false` for checking if the sale is published / pushed to third party integration.\nEndFragment"
 					},
 					"response": []
 				}

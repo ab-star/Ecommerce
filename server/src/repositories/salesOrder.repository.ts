@@ -77,14 +77,14 @@ export class SalesOrderRepository {
 
   public async getSalesOrders(filters: any) {
     try {
-      const { name, email, mobileNumber, startDate, endDate } = filters;
+      const { name, email, mobileNumber, startDate, endDate , isPublished } = filters;
     
       return SalesOrder.findAll({
         where: {
           ...(name && { name: { [Op.like]: `%${name}%` } }), // Case-insensitive partial matching
           ...(email && { email: { [Op.like]: `%${email}%` } }),
           ...(mobileNumber && { mobileNumber }),
-    
+          ...(isPublished && {isPublished}),
           // Add date range filter
           ...(startDate && endDate && {
             orderDate: { [Op.between]: [new Date(startDate), new Date(endDate)] },
