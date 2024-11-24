@@ -1,8 +1,13 @@
 <app-header (searchQueryEmitter)="onSearchQueryChange($event)"></app-header>
 
+<!-- Define the section for products with an id -->
 <app-custom-carousel></app-custom-carousel>
 
+<div id="products-section">
+  <app-products [searchQuery]="searchQuery" (cartUpdated)="onAddToCart($event)"></app-products>
+</div>
 
-<app-products [searchQuery]="searchQuery" (cartUpdated)="onAddToCart($event)"></app-products>
-
-<app-footer></app-footer>
+<!-- Define the section for contact with an id -->
+<div id="contact-section">
+  <app-footer></app-footer>
+</div>

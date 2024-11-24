@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from './cart.actions';
+import { addItemToCart, removeItemFromCart, resetCart, updateCartItemQuantity } from './cart.actions';
 import { initialState } from './cart.state';
 
 export const cartReducer = createReducer(
@@ -59,5 +59,7 @@ export const cartReducer = createReducer(
       ),
     };
   }),
+
+  on(resetCart, () => initialState) // Reset cart to the initial state
 
 );

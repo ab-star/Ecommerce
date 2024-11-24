@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +9,19 @@ export class ErrorHandlerService implements ErrorHandler {
   // Define specific error codes or types
   OUT_OF_STOCK_ERR = 'Out_Of_Stock';
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor() {}
 
   /**
    * Handles validation errors (status: 400)
    */
   private handleValidationError(err: any): void {
     if (err.error?.errorCodeType === this.OUT_OF_STOCK_ERR) {
-      this.showSnackBar(err.error?.message, 'error-snackbar');
+      this.showAlert(err.error?.message);
     } else if (Array.isArray(err.errors?.errors)) {
       const errorMessages = err.errors.errors.map((e: any) => e.message).join(', ');
-      this.showSnackBar(`Validation Error: ${errorMessages}`, 'error-snackbar');
+      this.showAlert(`Validation Error: ${errorMessages}`);
     } else {
-      this.showSnackBar('Validation failed. Please check your input.', 'error-snackbar');
+      this.showAlert('Validation failed. Please check your input.');
     }
   }
 
@@ -32,8 +31,8 @@ export class ErrorHandlerService implements ErrorHandler {
   private handleHttpError(err: HttpErrorResponse): void {
     const statusHandlers: { [status: number]: () => void } = {
       400: () => this.handleValidationError(err),
-      404: () => this.showSnackBar('Resource not found.', 'error-snackbar'),
-      500: () => this.showSnackBar('Internal server error. Please try again later.', 'error-snackbar'),
+      404: () => this.showAlert('Resource not found.'),
+      500: () => this.showAlert('Internal server error. Please try again later.'),
     };
 
     // Use specific handler if it exists, otherwise fallback
@@ -41,7 +40,7 @@ export class ErrorHandlerService implements ErrorHandler {
     if (handler) {
       handler();
     } else {
-      this.showSnackBar(`Unexpected server error: ${err.statusText || 'Unknown error'}`, 'error-snackbar');
+      this.showAlert(`Unexpected server error: ${err.statusText || 'Unknown error'}`);
     }
   }
 
@@ -50,22 +49,17 @@ export class ErrorHandlerService implements ErrorHandler {
    */
   private handleGenericError(error: Error | unknown): void {
     if (error instanceof Error) {
-      this.showSnackBar(`Error: ${error.message}`, 'error-snackbar');
+      this.showAlert(`Error: ${error.message}`);
     } else {
-      this.showSnackBar('An unknown error occurred!', 'error-snackbar');
+      this.showAlert('An unknown error occurred!');
     }
   }
 
   /**
-   * Show snackbar with consistent styling
+   * Show alert with error message
    */
-  private showSnackBar(message: string, panelClass: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: [panelClass],
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+  private showAlert(message: string): void {
+    alert(message); // Replace snackbar with alert dialog
   }
 
   /**

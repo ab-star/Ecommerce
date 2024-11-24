@@ -14,3 +14,5 @@ export const updateCartItemQuantity = createAction(
   '[Cart] Update Cart Item Quantity',
   props<{ id: string, quantity: number }>()
 );
+
+export const resetCart = createAction('[Cart] Reset Cart');

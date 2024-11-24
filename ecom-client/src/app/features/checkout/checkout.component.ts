@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { CartItem } from '../../store/cart/cart.state';
-import { addItemToCart, removeItemFromCart, updateCartItemQuantity } from '../../store/cart/cart.actions';
+import { addItemToCart, removeItemFromCart, resetCart, updateCartItemQuantity } from '../../store/cart/cart.actions';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector';
 import { CheckoutService } from '../../core/services/checkout.service';
 import { Router } from '@angular/router';
@@ -29,6 +29,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log("sales triggerdddd")
     this.checkoutForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -65,6 +66,7 @@ export class CheckoutComponent implements OnInit {
       this.checkOutService.createOrder(payload).subscribe((item)=>{
         this.toastr.success("Order placed successfully")
         this.router.navigate(['/']);
+        this.store.dispatch(resetCart()); // Reset the cart after successful order
       })
     } else if(!this.checkoutForm.valid) {
       // console.log("logged")
