@@ -1,4 +1,16 @@
-import { controller, httpPost, httpGet, httpPut, httpDelete, request, requestBody, response, requestParam, next as nextHandler, next } from 'inversify-express-utils';
+import {
+  controller,
+  httpPost,
+  httpGet,
+  httpPut,
+  httpDelete,
+  request,
+  requestBody,
+  response,
+  requestParam,
+  next as nextHandler,
+  next,
+} from 'inversify-express-utils';
 import { IntegrationService } from '../services/integration.service';
 import { createIntegrationSchema } from '../schemas/integration.schema'; // Adjusted import
 import { inject } from 'inversify';
@@ -17,18 +29,31 @@ export class IntegrationController {
 
   // Create a new integration or replace an existing one
   @httpPost('/', validateRequest({ body: createIntegrationSchema }))
-  async createIntegration(@requestBody() body: any, @response() res: any, @next() next: any) {
+  async createIntegration(
+    @requestBody() body: any,
+    @response() res: any,
+    @next() next: any
+  ) {
     try {
       const { apiUrl, apiToken } = body;
-      const integration = await this.integrationService.createOrReplaceIntegration(apiUrl, apiToken);
-      res.status(201).json({ message: 'Integration created/replaced successfully', integration });
+      const integration =
+        await this.integrationService.createOrReplaceIntegration(
+          apiUrl,
+          apiToken
+        );
+      res
+        .status(201)
+        .json({
+          message: 'Integration created/replaced successfully',
+          integration,
+        });
     } catch (error) {
-      return next(error); 
+      return next(error);
     }
   }
 
   // Fetch integration details
-  @httpGet('/') 
+  @httpGet('/')
   async getIntegration(@response() res: any, @next() next: any) {
     try {
       const integration = await this.integrationService.getIntegration();
@@ -37,7 +62,6 @@ export class IntegrationController {
       return next(error); // Passing service-level errors to error handler
     }
   }
-
 
   // Delete the integration
   @httpDelete('/')

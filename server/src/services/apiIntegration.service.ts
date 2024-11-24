@@ -14,7 +14,11 @@ export class ApiIntegrationService {
   }
 
   // Send sales order to the external API
-  public async sendSalesOrderToApi(salesOrder: any, apiUrl: string, apiToken: string) {
+  public async sendSalesOrderToApi(
+    salesOrder: any,
+    apiUrl: string,
+    apiToken: string
+  ) {
     const headers = {
       Authorization: `Bearer ${apiToken}`,
     };

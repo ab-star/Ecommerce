@@ -9,7 +9,8 @@ export class IntegrationService {
   private integrationRepository: IntegrationRepository;
 
   constructor(
-    @inject(TYPES.IntegrationRepository) integrationRepository: IntegrationRepository
+    @inject(TYPES.IntegrationRepository)
+    integrationRepository: IntegrationRepository
   ) {
     this.integrationRepository = integrationRepository;
   }
@@ -20,7 +21,10 @@ export class IntegrationService {
       // Attempt to delete the existing integration if present
       await this.integrationRepository.deleteExistingIntegration();
       // Create the new integration
-      return await this.integrationRepository.createIntegration(apiUrl, apiToken);
+      return await this.integrationRepository.createIntegration(
+        apiUrl,
+        apiToken
+      );
     } catch (error: any) {
       throw new ServiceError(GENERIC_ERROR_MESSAGE, error);
     }

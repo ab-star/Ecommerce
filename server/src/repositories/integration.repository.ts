@@ -4,7 +4,6 @@ import { NotFoundError, RepositoryError } from '../utils/errorCategory';
 import { GENERIC_ERROR_MESSAGE } from '../constants/error.constants';
 
 export class IntegrationRepository {
-  
   // Find an existing integration (assuming only one integration can exist)
   async findIntegration() {
     try {
@@ -34,10 +33,12 @@ export class IntegrationRepository {
   async deleteExistingIntegration() {
     try {
       const deletedRowCount = await Integration.destroy({ where: {} });
-      return deletedRowCount ? true : false
+      return deletedRowCount ? true : false;
     } catch (error: any) {
-      throw new RepositoryError('Error in deleting existing integration', error);
+      throw new RepositoryError(
+        'Error in deleting existing integration',
+        error
+      );
     }
   }
-
 }
