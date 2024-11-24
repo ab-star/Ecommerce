@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LandingComponent {
 
+  searchQuery: string = '';  // Store the search query
+
   constructor(private store: Store , private toastr: ToastrService) {}
 
   // Listen for the event emitted from Product component and dispatch to NgRx store
@@ -20,5 +22,9 @@ export class LandingComponent {
       price: product.price,
       name: product.name,
     }));
+  }
+
+  onSearchQueryChange(searchQuery: string): void {
+    this.searchQuery = searchQuery;
   }
 }

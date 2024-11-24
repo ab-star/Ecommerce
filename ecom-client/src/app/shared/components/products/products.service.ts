@@ -15,10 +15,11 @@ export class ProductService {
   constructor(private apiService: ApiService) {}
 
   // GET request to fetch products with pagination
-  getProducts(page: number = 1, limit: number = 4): Observable<ProductResponse> {
+  getProducts(page: number = 1, limit: number = 4 , searchQuery: string): Observable<ProductResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString());
+      .set('limit', limit.toString())
+      .set('name', searchQuery);
 
     return this.apiService.get<any>(this.baseUrl, params)
   }
